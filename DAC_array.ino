@@ -1,35 +1,38 @@
-
-byte aPins[] = {
-  2, 3, 4, 5, 6, 7, 8, 9 };       // an array of pin numbers making up the A byte LSB->MSB
-byte bPins[] = {
+/* The arrays store the pin numbers making up the X and Y bytes LSB->MSB
+ */
+byte Xpins[] = {
+  2, 3, 4, 5, 6, 7, 8, 9 };       
+byte Ypins[] = {
   12, 13, A5, A4, A3, A2, A1, A0};
 int d;
-int adder;
 byte coordinateX[8];
 byte coordinateY[8];
+int shapeX[] = {0, 37, 127, 219, 255, 219, 127, 37};
+int shapeY[] = {127, 37, 0, 37, 127, 219, 255, 219};
+
 
 void setup() {
-  //Serial.begin(9600);
-  d = 1;
-  adder = 1;
-  //DigitToBinArray(0, coordinateY);
-  // a for loop to initialize each pin as an output:
+//  Serial.begin(9600);
+  d = 0;
+  
+// for loop to initialize each pin as an output:
   for (int i = 0; i < 8; i++)  {
-    pinMode(aPins[i], OUTPUT);
-    pinMode(bPins[i], OUTPUT); 
+    pinMode(Xpins[i], OUTPUT);
+    pinMode(Ypins[i], OUTPUT); 
   }
 }
 
 void loop() {
 
-  if (d > 255 || d < 1) {
-    adder = adder * -1;
-  }
-  d+=adder;
-  DigitToBinArray(d, coordinateX);
-  DigitToBinArray(d, coordinateY);
-  painter(coordinateX, aPins, coordinateY, bPins);
-  //delay(1);
+  if (d > sizeof(shapeX)-1) {
+    d=0;  }
+
+  DigitToBinArray(shapeX[d], coordinateX);
+  DigitToBinArray(shapeY[d], coordinateY);
+  painter(coordinateX, Xpins, coordinateY, Ypins);
+  d++;
+  
+  delay(1);
   // delay(200);
   // Serial.print(d);
   // Serial.print(" ");
@@ -37,7 +40,7 @@ void loop() {
   // Serial.print(coordinateX[i]);
   // }
   // Serial.println();
-  //tester(aPins, bPins);
+  //tester(Xpins, Ypins);
 }
 
 
@@ -79,8 +82,9 @@ void painter(byte coordinateX[], byte pinArrayX[], byte coordinateY[], byte pinA
     else{
       digitalWrite(pinArrayY[i], LOW);
     } 
+  }
+  //delayMicroseconds(10);
 }
- //delayMicroseconds(10);
-}
+
 
 
