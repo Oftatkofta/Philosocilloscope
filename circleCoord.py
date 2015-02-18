@@ -15,7 +15,7 @@ for i in range(0,360,2):
     if i != 358:
         f.write(str(x)+', ')
     else:
-        f.write(str(x)+'}\n')
+        f.write(str(x)+'};\n')
 
 f.write('byte shapeY[] = {')
 
@@ -25,7 +25,7 @@ for i in range(0,360,2):
     if i != 358:
         f.write(str(y)+', ')
     else:
-        f.write(str(y)+'}\n')
+        f.write(str(y)+'};\n')
 
 f.close()
 
