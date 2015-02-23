@@ -9,7 +9,7 @@ for i in range(0,256):
    # s=s.replace('0','L')
    # s=s.replace('1','H')
     print s
-    f.write('\"'+s+'\",'+'\n')
+    f.write(s+', ')
 
 f.close()
 

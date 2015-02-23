@@ -9,8 +9,8 @@ byte Ypins[] = {
 int d;
 bool coordinateX[8];
 bool coordinateY[8];
-byte shapeX[] = {0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 247, 239, 231, 223, 215, 207, 199, 191, 183, 175, 167, 159, 151, 143, 135, 127, 119, 111, 103, 95, 87, 79, 71, 63, 55, 47, 39, 31, 23, 15, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
-byte shapeY[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 247, 239, 231, 223, 215, 207, 199, 191, 183, 175, 167, 159, 151, 143, 135, 127, 119, 111, 103, 95, 87, 79, 71, 63, 55, 47, 39, 31, 23, 15, 7};
+byte shapeX[] = {255, 249, 231, 202, 167, 127, 87, 52, 23, 5, 0, 5, 23, 52, 87, 127, 167, 202, 231, 249, 249};
+byte shapeY[] = {127, 167, 202, 231, 249, 255, 249, 231, 202, 167, 127, 87, 52, 23, 5, 0, 5, 23, 52, 87, 249};
 void setup() {
   //Serial.begin(115200);
   d = 0;
@@ -20,13 +20,6 @@ void setup() {
     pinMode(Xpins[i], OUTPUT);
     pinMode(Ypins[i], OUTPUT);
   }
-//    for (int i = 0; i < sizeof(shapeX - 1); i++) {
-//      float x = (128*cos(i) + 127);
-//      float y = (128*sin(i) + 127);
-//      shapeY[i] = (int)y;
-//      shapeX[i] = (int)x;
-//      delay(1);
-//    }
 
 }
 
@@ -34,24 +27,13 @@ void loop() {
 
   if (d > sizeof(shapeX) - 1) {
     d = 0;
+
   }
 
-  DigitToBinArray(shapeX[d], coordinateX);
-  DigitToBinArray(shapeY[d], coordinateY);
-  painter(coordinateX, Xpins, coordinateY, Ypins);
-
-
-  //delay(1);
-     //Serial.println(shapeX);
-  //  Serial.print(" ");
-  //  for (int i = 0; i < 8; i++) {
-  //    Serial.print(shapeX[i]);
-  //    Serial.print("=");
-  //    Serial.print(coordinateX[i]);
-  //    Serial.print(" ");
-  //  }
-  //  Serial.println();
-  //tester(Xpins, Ypins);
+  //  DigitToBinArray(shapeX[d], coordinateX);
+  //  DigitToBinArray(shapeY[d], coordinateY);
+  //  painter(coordinateX, Xpins, coordinateY, Ypins);
+  painter2(shapeX[d], Xpins, shapeY[d], Ypins);
   d++;
 }
 
@@ -99,26 +81,31 @@ void painter(bool coordinateX[], byte pinArrayX[], bool coordinateY[], byte pinA
       digitalWrite(pinArrayY[i], LOW);
     }
   }
-  //delayMicroseconds(10);
+
 }
 
-void painter2(bool coordinateX[], byte pinArrayX[], bool coordinateY[], byte pinArrayY[]) {
+void painter2(int Xcord, byte pinArrayX[], int Ycord, byte pinArrayY[]) {
+
+  //Make sure that we not overflow our 8-bit DAC
+  int x = Xcord % 256;
+  int y = Ycord % 256;
 
   for (int i = 0; i < 8; i++) {
-    if (coordinateX[i]) {
+
+    if (x % 2 == 1) {
       digitalWrite(pinArrayX[i], HIGH);
-    }
-    else {
+    } else {
       digitalWrite(pinArrayX[i], LOW);
     }
-
-    if (coordinateY[i]) {
+    x = x / 2;
+    if (y % 2 == 1) {
       digitalWrite(pinArrayY[i], HIGH);
-    }
-    else {
+    } else {
       digitalWrite(pinArrayY[i], LOW);
     }
+    y = y / 2;
   }
-  //delayMicroseconds(10);
 }
+//delayMicroseconds(10);
+
 
