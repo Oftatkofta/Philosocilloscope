@@ -44,5 +44,14 @@ Now I'll try optimizing the code:
 32.5 ms | 90
 16 ms | 45
 
-Goddamn, I will need do do something better. Let's try the boolean array...
+Goddamn, it got worse! I will need do do something better. Let's try the bitRead() function directly on the coordinate integer
+
+46 ms | 300
+24 ms | 200
+23 ms | 180
+16 ms | 100
+11.5 ms | 90
+5.8 ms | 45
+
+Perfect! Now I can draw 180 points without obvious jitter.
 

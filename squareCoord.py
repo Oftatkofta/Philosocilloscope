@@ -5,7 +5,16 @@ A super quick script to generate X&Y coodinates for drawing a square on an oscil
 so that the coordinates can be copypasted directly in to an Arduino sketch.
 '''
 
+points=360
+x=[]
+y=[]
+
 f = open('squareCoord.txt',mode='w')
+
+def squareWriter(points, xlist, ylist):
+    for i in range(0,255,points/4):
+
+
 
 f.write('byte shapeX[] = {')
 
