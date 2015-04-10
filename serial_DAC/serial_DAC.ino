@@ -4,9 +4,10 @@ byte Xpins[] = {
 byte Ypins[] = {
   12, 13, A5, A4, A3, A2, A1, A0 //LSB->MSB
 };
-//int d;
 
-//byte shapeX[] = {123};
+int d;
+
+byte shape[30];
 //byte shapeY[] = {123};
 int x = 0;
 int y = 0;
@@ -24,15 +25,19 @@ void setup() {
   }
 }
 void loop() {
+    if (d > sizeof(shape) - 2) {
+    d = 0;
+
+  }
   if (Serial.available() > 0){
-    x = Serial.parseInt();
-    y = Serial.parseInt();
-    if (Serial.read() == '\n') {
-    Serial.print(x,y);
-  }
-  }
-  painter3(x, y, Xpins, Ypins);
- 
+    Serial.readBytes(shape,30);
+    //x = Serial.parseInt();
+    //y = Serial.parseInt();
+    //if (Serial.read() == '\n') {
+    //Serial.print(x,y); }
+  } 
+  painter3(shape[d], shape[d+1], Xpins, Ypins);
+ d+=2;
 }
 
 void painter3(int coordinateX, int coordinateY, byte pinArrayX[], byte pinArrayY[]) {

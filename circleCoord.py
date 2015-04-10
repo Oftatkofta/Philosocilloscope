@@ -14,8 +14,10 @@ f = open('circleCoord.txt',mode='w')
 def coordgen(pointnum, xlist, ylist, radius, origo):
     for i in range(0,360,360/pointnum):
         alpha=math.radians(i)
-        xlist.append(int(radius*math.cos(alpha)+origo[0]))
-        ylist.append(int(radius*math.sin(alpha)+origo[1]))
+        x=int(radius*math.cos(alpha)+origo[0])
+        y=int(radius*math.sin(alpha)+origo[1])
+        xlist.append(x)
+        ylist.append(y)
 
 
 def coordwriter(infile, xlist, ylist):
