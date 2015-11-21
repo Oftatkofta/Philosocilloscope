@@ -11,38 +11,17 @@ y=[]
 
 f = open('squareCoord.txt',mode='w')
 
-def squareWriter(points, xlist, ylist):
-    for i in range(0,255,points/4):
 
+
+for i in range(0,255,16):
+    for j in range(0,255,16):
+        x.append(i)
+        y.append(j)
 
 
 f.write('byte shapeX[] = {')
-
-for i in range(0,255,8):
-        f.write(str(i)+', ')
-
-for i in range(0,255,8):
-        f.write(str(255)+', ')
-
-for i in range(255,0,-8):
-        f.write(str(i)+', ')
-
-for i in range(255,0,-8):
-        f.write(str(0)+', ')
-
-
+f.write(str(x))
 f.write('\nbyte shapeY[] = {')
-
-for i in range(0,255,8):
-        f.write(str(0)+', ')
-
-for i in range(0,255,8):
-        f.write(str(i)+', ')
-
-for i in range(255,0,-8):
-        f.write(str(255)+', ')
-
-for i in range(255,0,-8):
-        f.write(str(i)+', ')
+f.write(str(y))
 
 f.close()

@@ -33,8 +33,10 @@ void loop() {
   //  DigitToBinArray(shapeX[d], coordinateX);
   //  DigitToBinArray(shapeY[d], coordinateY);
   //  painter(coordinateX, Xpins, coordinateY, Ypins);
-  painter2(shapeX[d], Xpins, shapeY[d], Ypins);
+  // painter2(shapeX[d], Xpins, shapeY[d], Ypins);
+  tester(Xpins, Ypins) ;
   d++;
+  //delayMicroseconds(1);
 }
 
 
@@ -106,6 +108,6 @@ void painter2(int Xcord, byte pinArrayX[], int Ycord, byte pinArrayY[]) {
     y = y / 2;
   }
 }
-//delayMicroseconds(10);
+
 
 
