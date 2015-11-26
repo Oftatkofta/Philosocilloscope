@@ -10,14 +10,14 @@ import numpy as np
 
 #fout=open('DAC_shiftreg/shiftregDAC/test.ino', 'w')
 
-n=40
+n=50
 print "N is %d" %n
-c=Square(127, 127, 64,64, n*16)
+c=Square(127, 127, 120,60, n)
 print "%s has %d points" %(c.get_shape_type(), c.get_n_points())
 print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(c.min_x, c.max_x, c.min_y, c.max_y)
 s = Shape(127,127, shape_type='complex')
 for p in c.get_points():
-    sc = Circle(p.get_x(), p.get_y(), 64, n)
+    sc = Circle(p.get_x(), p.get_y(), 32, n)
     s.add_points(sc.get_points())
 
 print "%s has %d points" %(s.get_shape_type(), s.get_n_points())
@@ -27,8 +27,8 @@ print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(s.min_x, s.max_x, s.min_y, s.ma
 
 
 
-#Z = np.logical_or(c.get_points_as_numpy_array(), s.get_points_as_numpy_array())
-Z = s.get_points_as_numpy_array()
+Z = np.logical_or(c.get_points_as_numpy_array(), s.get_points_as_numpy_array())
+#Z = s.get_points_as_numpy_array()
 G = np.zeros((256,256,3))
 G[Z>0.5] = [0,1,0]
 G[Z<0.5] = [0,0,0]

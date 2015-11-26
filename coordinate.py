@@ -7,8 +7,6 @@ class Point(object):
     """
     Class that represents an X/Y coordinate pair.
 
-
-
     Args:
         X (int or float): X-coorinate.
         Y (int or float): Y-coordinate.
@@ -169,10 +167,11 @@ class Shape(Point):
 
     def get_points_as_numpy_array(self):
         """
-        :return: (numpy array) a 256x256 binary numpy array representing
-        the shape on screen, xy coordinates are cropped to 8-bit range (0-255)
-        """
 
+        Returns: (numpy array) a 256x256 array with binary numbers representing
+        the shape on screen, xy coordinates are cropped to 8-bit range (0-255)
+
+        """
 
         out = np.zeros((256,256),dtype = bool)
         for p in self.get_points():
@@ -209,33 +208,46 @@ class Square(Shape):
         Adds roughly
 
         """
-        #TODO make npoints exact!
+
+
+        npoints=int(self.npoints)
+
         #Calculate corner points
         x0, x1 = self.x-self.width*0.5, self.x+self.width*0.5
-        y0, y1 =self.y-self.height*0.5, self.y+self.height*0.5
-        #Calculate number of points per side, rounds to nearest whole number
-        n_hpoints=round(float(self.width)/(self.width+self.height)*0.5*self.npoints)
-        n_vpoints=round(float(self.height)/(self.width+self.height)*0.5*self.npoints)
-        #Calculate distnce between points
-        dx, dy =self.width/n_hpoints, self.height/n_vpoints
+        y0, y1 = self.y-self.height*0.5, self.y+self.height*0.5
 
-        xlist=[]
-        ylist=[]
-        for i in range(int(n_hpoints)):
-            x = x0+i*dx
-            if x > x1:
-                break
-            xlist.append(Point(x, y0))
-            xlist.append(Point(x, y1))
+        #Calculate perimeter
+        perimeter = 2*self.width + 2*self.height
 
+        #Calculate distance between points
+        dp = float(perimeter)/npoints
 
-        for i in range(int(n_vpoints)):
-            y=y0+i*dy
-            if y > y1:
-                break
-            ylist.append(Point(x0, y0+i*dx))
-            ylist.append(Point(x1, y0+i*dy))
+        x=x0
+        y=y0
 
-        self.points = self.points+xlist+ylist
+        for i in range(npoints):
+            if y < y1 and x == x0:
+                self.add_point(Point(x,y))
+                y += dp
+                pass
+
+            elif y >= y1 and x < x1:
+                y=y1
+                x += dp
+                self.add_point(Point(x,y))
+                pass
+
+            elif x >= x1 and y > y0:
+                x=x1
+                y -= dp
+                self.add_point(Point(x,y))
+                pass
+
+            else:
+                x -= dp
+                y = y0
+                self.add_point(Point(x,y))
+                pass
+
 
 
