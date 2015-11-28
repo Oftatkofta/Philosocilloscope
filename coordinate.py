@@ -1,6 +1,7 @@
 import math
 import string
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Point(object):
@@ -177,7 +178,19 @@ class Shape(Point):
         for p in self.get_points():
             out[p.get_constrained_y(), p.get_constrained_x()] = True
         return out
+    def draw(self):
+        """
+        shows the shape as a pyplot
+        Returns: (Pyplot)
 
+        """
+        npArray = self.get_points_as_numpy_array()
+        Green = np.zeros((256,256,3))
+        Green[npArray>0.5] = [0,1,0]
+        Green[npArray<0.5] = [0,0,0]
+        plt.imshow(Green)
+        plt.gca().invert_yaxis()
+        plt.show()
 
 class Circle(Shape):
     def __init__(self, origo_x, origo_y, radius, npoints):
@@ -205,7 +218,8 @@ class Square(Shape):
 
     def _coordgen(self):
         """
-        Adds roughly
+        Adds equally spaced points in a clockwise fashion starting from the
+        bottom left corner.
 
         """
 
@@ -217,64 +231,60 @@ class Square(Shape):
         y0, y1 = self.y-self.height*0.5, self.y+self.height*0.5
 
         #Calculate perimeter length
-        perimeter = 2*self.width + 2*self.height
+        perimeter = 2.0*self.width + 2.0*self.height
 
         #Calculate distance between points
         dp = float(perimeter)/npoints
 
-        #Calculate whole horizontal and vertical points per side
-        widthFraction = float(self.width)/(self.width+self.height)
-        heightFraction = float(self.height)/(self.width+self.height)
-        nHpoints=int(widthFraction*0.5*self.npoints)
-        nVpoints=int(heightFraction*0.5*self.npoints)
+        #Calculate horizontal and vertical points per side
 
-        #Start drawing at x0, y0
+        nHpoints = self.width/dp
+        nVpoints = self.height/dp
+
+        #Start drawing at <x0,y0>
         x = x0
         y = y0
-        self.add_point(Point(x0,y0))
-        self.add_point(Point(x0,y1))
-        self.add_point(Point(x1,y1))
-        self.add_point(Point(x1,y0))
+
         for i in range(npoints):
 
-            if i < nVpoints:
+            if i < int(nVpoints):
                 self.add_point(Point(x,y))
                 y += dp
-                pass
 
-            elif i == nVpoints:
+
+            elif i == int(nVpoints):
                 self.add_point(Point(x,y))
                 remainder = y1 - y
-                y=y1
-                x += dp - remainder
-                pass
+                y = y1
+                x = x0
+                x += remainder
 
-            elif i < (nHpoints + nVpoints):
+
+            elif i < int(nVpoints + nHpoints):
                 self.add_point(Point(x,y))
                 x += dp
-                pass
 
-            elif i == (nHpoints + nVpoints):
+
+            elif i == int(nVpoints + nHpoints):
                 self.add_point(Point(x,y))
                 remainder = x1 - x
                 x=x1
-                y = y1 - (dp-remainder)
-                pass
+                y = y1 - remainder
 
-            elif i < (nHpoints + 2 * nVpoints + 1):
+
+            elif i < int(2 * nVpoints + nHpoints):
                 self.add_point(Point(x,y))
                 y -= dp
-                pass
 
-            elif i == (nHpoints + 2 * nVpoints):
+
+            elif i == int(2 * nVpoints + nHpoints):
                 self.add_point(Point(x,y))
                 remainder = y - y0
                 y = y0
-                x = x1 - (dp-remainder)
+                x = x1
+                x -= remainder
 
-                pass
 
             else:
                 self.add_point(Point(x,y))
                 x -= dp
-                pass
