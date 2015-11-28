@@ -212,42 +212,69 @@ class Square(Shape):
 
         npoints=int(self.npoints)
 
-        #Calculate corner points
+        #Calculate corner point coordinates
         x0, x1 = self.x-self.width*0.5, self.x+self.width*0.5
         y0, y1 = self.y-self.height*0.5, self.y+self.height*0.5
 
-        #Calculate perimeter
+        #Calculate perimeter length
         perimeter = 2*self.width + 2*self.height
 
         #Calculate distance between points
         dp = float(perimeter)/npoints
 
-        x=x0
-        y=y0
+        #Calculate whole horizontal and vertical points per side
+        widthFraction = float(self.width)/(self.width+self.height)
+        heightFraction = float(self.height)/(self.width+self.height)
+        nHpoints=int(widthFraction*0.5*self.npoints)
+        nVpoints=int(heightFraction*0.5*self.npoints)
 
+        #Start drawing at x0, y0
+        x = x0
+        y = y0
+        self.add_point(Point(x0,y0))
+        self.add_point(Point(x0,y1))
+        self.add_point(Point(x1,y1))
+        self.add_point(Point(x1,y0))
         for i in range(npoints):
-            if y < y1 and x == x0:
+
+            if i < nVpoints:
                 self.add_point(Point(x,y))
                 y += dp
                 pass
 
-            elif y >= y1 and x < x1:
-                y=y1
-                x += dp
+            elif i == nVpoints:
                 self.add_point(Point(x,y))
+                remainder = y1 - y
+                y=y1
+                x += dp - remainder
                 pass
 
-            elif x >= x1 and y > y0:
-                x=x1
-                y -= dp
+            elif i < (nHpoints + nVpoints):
                 self.add_point(Point(x,y))
+                x += dp
+                pass
+
+            elif i == (nHpoints + nVpoints):
+                self.add_point(Point(x,y))
+                remainder = x1 - x
+                x=x1
+                y = y1 - (dp-remainder)
+                pass
+
+            elif i < (nHpoints + 2 * nVpoints + 1):
+                self.add_point(Point(x,y))
+                y -= dp
+                pass
+
+            elif i == (nHpoints + 2 * nVpoints):
+                self.add_point(Point(x,y))
+                remainder = y - y0
+                y = y0
+                x = x1 - (dp-remainder)
+
                 pass
 
             else:
-                x -= dp
-                y = y0
                 self.add_point(Point(x,y))
+                x -= dp
                 pass
-
-
-
