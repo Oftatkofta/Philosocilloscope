@@ -12,9 +12,6 @@ class Point(object):
         X (int or float): X-coorinate.
         Y (int or float): Y-coordinate.
 
-    Attributes:
-        X.
-        Y.
     """
 
     def __init__(self, x, y):
@@ -33,29 +30,24 @@ class Point(object):
 
     def get_rounded_x(self):
         """
-
         :return:(int) x coordinate rounded to nearest whole number.
         """
         return int(round(self.x))
 
     def get_rounded_y(self):
         """
-
         :return: (int) y coordinate rounded to nearest whole number.
         """
         return int(round(self.y))
 
     def get_constrained_x(self):
         """
-
         :return: (int) x coodinate constrained to 8-bit range 0-255
         """
         return max(min(self.get_rounded_x(), 255), 0)
 
-
     def get_constrained_y(self):
         """
-
         :return: (int) y coodinate constrained to 8-bit range 0-255
         """
         return max(min(self.get_rounded_y(), 255), 0)
@@ -85,7 +77,7 @@ class Shape(Point):
         self.min_y = None
 
     def __repr__(self):
-        return 'Shape at(' + str(self.x) + ', ' + str(self.y) + ')'
+        return 'Shape centered at(' + str(self.x) + ', ' + str(self.y) + ')'
 
     def get_n_points(self):
 
@@ -222,7 +214,7 @@ class Square(Shape):
         bottom left corner.
 
         """
-
+        #TODO Make fix wierd upper left corner point skip bug
 
         npoints=int(self.npoints)
 
