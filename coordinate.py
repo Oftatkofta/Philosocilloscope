@@ -87,7 +87,8 @@ class Shape(Point):
 
         self.points.append(point)
 
-        if self.get_n_points() == 1:
+
+        if self.max_x == None:
             self.max_x, self.min_x = point.get_x(), point.get_x()
             self.max_y, self.min_y = point.get_y(), point.get_y()
 
@@ -109,8 +110,8 @@ class Shape(Point):
         :param pointlist: (list) list of Point objects to add to the shape
         :return: None
         """
-
-        self.points += pointlist
+        for point in pointlist:
+            self.add_point(point)
 
     def get_shape_type(self):
         """
@@ -191,7 +192,11 @@ class Circle(Shape):
         self._coordgen()
 
     def _coordgen(self):
+        """
+        Adds equally spaced points along the perimeter of the to the circle
+        counterclockwise.
 
+        """
         alpha = 2 * math.pi / self.npoints
 
         for i in range(self.npoints):
@@ -214,7 +219,7 @@ class Square(Shape):
         bottom left corner.
 
         """
-        #TODO Make fix wierd upper left corner point skip bug
+        #TODO Make fix upper left corner point skip bug
 
         npoints=int(self.npoints)
 

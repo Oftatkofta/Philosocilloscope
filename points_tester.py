@@ -10,9 +10,9 @@ import numpy as np
 
 #fout=open('DAC_shiftreg/shiftregDAC/test.ino', 'w')
 
-n=4
+n=64
 print "N is %d" %n
-c=Square(100, 100, 100,100, n)
+c=Square(100, 100, 123,100, n)
 print "%s has %d points" %(c.get_shape_type(), c.get_n_points())
 print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(c.min_x, c.max_x, c.min_y, c.max_y)
 s = Shape(127,127, shape_type='complex')
@@ -29,5 +29,5 @@ print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(s.min_x, s.max_x, s.min_y, s.ma
 
 #Z = np.logical_or(c.get_points_as_numpy_array(), s.get_points_as_numpy_array())
 #s.draw()
-c.draw()
+s.draw()
 #fout.write(sq+ci)
