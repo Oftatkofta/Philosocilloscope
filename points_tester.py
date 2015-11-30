@@ -10,18 +10,23 @@ import numpy as np
 
 #fout=open('DAC_shiftreg/shiftregDAC/test.ino', 'w')
 
-n=33
+n=7
+center = Point(127,127)
 print "N is %d" %n
-# c=Square(100, 100, 50,100, n)
-# print "%s has %d points" %(c.get_shape_type(), c.get_n_points())
-# print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(c.min_x, c.max_x, c.min_y, c.max_y)
-# s = Shape(127,127, shape_type='complex')
-# for p in c.get_points():
-#     sc = Circle(p.get_x(), p.get_y(),random.randint(1,30), 33)
-#     s.add_points(sc.get_points())
+c=Circle(center,50,n)
+o=Circle(center, 100, n)
+print "%s has %d points" %(c.get_shape_type(), c.get_n_points())
+print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(c.min_x, c.max_x, c.min_y, c.max_y)
+l = Shape(center, shape_type='complex')
+for i in range(c.get_n_points()):
+    p0 = c.points[i]
+    p1 = o.points[i]
+    ls = Line(p0, p1, 30)
+    poop = Circle(p1, 10,20)
+    loop= Square(p0, 10,12, 31)
+    l.add_points(ls.get_points()+poop.get_points()+loop.get_points())
 
-l=Line(0,0,100,120, n)
-
+l += Circle(center, 40, 60)
 print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
 print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
 #

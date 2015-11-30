@@ -68,11 +68,11 @@ class Point(object):
 
 
 class Shape(Point):
-    def __init__(self, center_x, center_y, npoints=0, shape_type='NA'):
-        Point.__init__(self, center_x, center_y)
+    def __init__(self, center_Point, npoints=0, shape_type='NA'):
+        Point.__init__(self, center_Point.get_x(), center_Point.get_y())
         self.shape_type = shape_type
         self.points = []
-        self.npoints = int(npoints)
+        self.npoints = npoints
         self.max_x = None
         self.min_x = None
         self.max_y = None
@@ -80,6 +80,25 @@ class Shape(Point):
 
     def __repr__(self):
         return 'Shape centered at(' + str(self.x) + ', ' + str(self.y) + ')'
+
+    def __add__(self, other):
+        outPoints = self.points + other.points
+        outMaxX = max(self.max_x, other.max_x)
+        outMinX = min(self.min_x, other.min_x)
+        outMaxY = max(self.max_y, other.max_y)
+        outMinY = min(self.min_y, other.min_y)
+
+        outCenter = Point(outMaxX-outMinX, outMaxY-outMinY)
+
+        outShape = Shape(outCenter, len(outPoints), 'composite')
+
+        outShape.max_x = outMaxX
+        outShape.min_x = outMinX
+        outShape.max_y = outMaxY
+        outShape.min_y = outMinY
+        outShape.points = outPoints
+
+        return outShape
 
     def get_n_points(self):
 
@@ -150,7 +169,10 @@ class Shape(Point):
         """
 
         :return: (str) Points as a C-array consisting of 16-bit words
-        with x as MSB ends with newline
+        with x coordinate as MSB, and y as LSB ends with newline.
+
+        Args:
+            variablename: (str) Name of resulting C array
         """
         out = "uint16_t %s[] = {" %variablename
         for point in self.get_sorted_points():
@@ -182,7 +204,6 @@ class Shape(Point):
         """
         npArray = self.get_points_as_numpy_array(height, width)
         RGB = np.zeros(npArray.shape+(3,))
-        #Green = np.zeros((256,256,3))
 
         RGB[npArray>0.5] = [0,1,0]
         RGB[npArray<0.5] = [0,0,0]
@@ -191,8 +212,9 @@ class Shape(Point):
         plt.show()
 
 class Circle(Shape):
-    def __init__(self, origo_x, origo_y, radius, npoints):
-        Shape.__init__(self, origo_x, origo_y, npoints, 'circle')
+
+    def __init__(self, origo_Point, radius, npoints):
+        Shape.__init__(self, origo_Point, npoints, 'circle')
         self.radius = radius
         self._coordgen()
 
@@ -211,8 +233,8 @@ class Circle(Shape):
 
 
 class Square(Shape):
-    def __init__(self, center_x, center_y, width, heigth, npoints):
-        Shape.__init__(self, center_x, center_y, npoints, 'square')
+    def __init__(self, center_Point, width, heigth, npoints):
+        Shape.__init__(self, center_Point, npoints, 'square')
         self.width = width
         self.height = heigth
         self._coordgen()
@@ -292,15 +314,16 @@ class Square(Shape):
 
 class Line(Shape):
     """
-    A line from <x0, y0> to <x1, y1>, containing npoints number of points
+    A line between two Point objects, containing npoints number of points
     """
-    def __init__(self, x0, y0, x1, y1, npoints):
-        Shape.__init__(self, abs((x1-x0)/2), abs((y1-y0)/2), npoints, 'line')
-        self.length = math.sqrt((x1-x0)**2+(y1-y0)**2)
-        self.x0 = x0
-        self.y0 = y0
-        self.x1 = x1
-        self.y1 = y1
+    def __init__(self, Point0, Point1, npoints):
+        self.x0 = Point0.get_x()
+        self.y0 = Point0.get_y()
+        self.x1 = Point1.get_x()
+        self.y1 = Point1.get_y()
+        self.length = math.sqrt((self.x1-self.x0)**2+(self.y1-self.y0)**2)
+        Shape.__init__(self, Point((self.x1-self.x0)/2.0,(self.y1-self.y0)/2.0)
+                       , npoints, 'line')
         self._coordgen()
 
     def _coordgen(self):
