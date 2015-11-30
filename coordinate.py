@@ -40,17 +40,19 @@ class Point(object):
         """
         return int(round(self.y))
 
-    def get_constrained_x(self):
+    def get_constrained_x(self, max_x = 255):
         """
-        :return: (int) x coodinate constrained to 8-bit range 0-255
+        :return: (int) X-coodinate constrained to max_x, defaults to 8-bit
+        range 0-255
         """
-        return max(min(self.get_rounded_x(), 255), 0)
+        return max(min(self.get_rounded_x(), max_x), 0)
 
-    def get_constrained_y(self):
+    def get_constrained_y(self, max_y = 255):
         """
-        :return: (int) y coodinate constrained to 8-bit range 0-255
+        :return: (int) Y-coodinate constrained to max_x, defaults to 8-bit
+        range 0-255
         """
-        return max(min(self.get_rounded_y(), 255), 0)
+        return max(min(self.get_rounded_y(), max_y), 0)
 
 
     def __str__(self):
@@ -144,7 +146,7 @@ class Shape(Point):
         self.points.sort(
             key=lambda point: math.sqrt(point.x ** 2 + point.y ** 2))
 
-    def get_points_as_C_array(self, variablename, ):
+    def get_points_as_C_array(self, variablename):
         """
 
         :return: (str) Points as a C-array consisting of 16-bit words
@@ -159,29 +161,32 @@ class Shape(Point):
         out = string.rstrip(out,', ')
         return out + '};\n'
 
-    def get_points_as_numpy_array(self):
+    def get_points_as_numpy_array(self, height=256, width=256):
         """
 
-        Returns: (numpy array) a 256x256 array with binary numbers representing
-        the shape on screen, xy coordinates are cropped to 8-bit range (0-255)
+        Returns: (numpy array) a width x height array with binary numbers
+        representing the shape on screen, xy coordinates are cropped
+        to fit within the array, defaults to 8-bit range (0-255).
 
         """
 
-        out = np.zeros((256,256),dtype = bool)
+        out = np.zeros((height,width),dtype = bool)
         for p in self.get_points():
-            out[p.get_constrained_y(), p.get_constrained_x()] = True
+            out[p.get_constrained_y(height-1), p.get_constrained_x(width-1)] = True
         return out
-    def draw(self):
+    def draw(self, height=256, width=256):
         """
         shows the shape as a pyplot
         Returns: (Pyplot)
 
         """
-        npArray = self.get_points_as_numpy_array()
-        Green = np.zeros((256,256,3))
-        Green[npArray>0.5] = [0,1,0]
-        Green[npArray<0.5] = [0,0,0]
-        plt.imshow(Green)
+        npArray = self.get_points_as_numpy_array(height, width)
+        RGB = np.zeros(npArray.shape+(3,))
+        #Green = np.zeros((256,256,3))
+
+        RGB[npArray>0.5] = [0,1,0]
+        RGB[npArray<0.5] = [0,0,0]
+        plt.imshow(RGB)
         plt.gca().invert_yaxis()
         plt.show()
 
@@ -203,7 +208,6 @@ class Circle(Shape):
             x = self.radius *  math.cos(alpha*i) + self.x
             y = self.radius *  math.sin(alpha*i) + self.y
             self.add_point(Point(x, y))
-
 
 
 class Square(Shape):
@@ -285,3 +289,35 @@ class Square(Shape):
             else:
                 self.add_point(Point(x,y))
                 x -= dp
+
+class Line(Shape):
+    """
+    A line from <x0, y0> to <x1, y1>, containing npoints number of points
+    """
+    def __init__(self, x0, y0, x1, y1, npoints):
+        Shape.__init__(self, abs((x1-x0)/2), abs((y1-y0)/2), npoints, 'line')
+        self.length = math.sqrt((x1-x0)**2+(y1-y0)**2)
+        self.x0 = x0
+        self.y0 = y0
+        self.x1 = x1
+        self.y1 = y1
+        self._coordgen()
+
+    def _coordgen(self):
+        """
+        Adds npoints equally spaced points along the line.
+
+        """
+
+        #First we add the endpoints
+        #self.add_point(Point(self.x0, self.y0))
+        #self.add_point(Point(self.x1, self.y1))
+
+        dx = float(self.x1-self.x0)/(self.npoints-1)
+        dy = float(self.y1-self.y0)/(self.npoints-1)
+        x = self.x0
+        y = self.y0
+        for i in range(self.npoints):
+            x = self.x0 + i * dx
+            y = self.y0 + i * dy
+            self.add_point(Point(x, y))

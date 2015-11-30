@@ -10,24 +10,40 @@ import numpy as np
 
 #fout=open('DAC_shiftreg/shiftregDAC/test.ino', 'w')
 
-n=64
+n=33
 print "N is %d" %n
-c=Square(100, 100, 123,100, n)
-print "%s has %d points" %(c.get_shape_type(), c.get_n_points())
-print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(c.min_x, c.max_x, c.min_y, c.max_y)
-s = Shape(127,127, shape_type='complex')
-for p in c.get_points():
-    sc = Circle(p.get_x(), p.get_y(),random.randint(1,30), 33)
-    s.add_points(sc.get_points())
+# c=Square(100, 100, 50,100, n)
+# print "%s has %d points" %(c.get_shape_type(), c.get_n_points())
+# print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(c.min_x, c.max_x, c.min_y, c.max_y)
+# s = Shape(127,127, shape_type='complex')
+# for p in c.get_points():
+#     sc = Circle(p.get_x(), p.get_y(),random.randint(1,30), 33)
+#     s.add_points(sc.get_points())
 
-print "%s has %d points" %(s.get_shape_type(), s.get_n_points())
-print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(s.min_x, s.max_x, s.min_y, s.max_y)
+l=Line(0,0,100,120, n)
 
-
-
+print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
+print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
+#
+# w = Shape(250,250, shape_type='wierd')
+# alpha = 6 * math.pi / n
+# radius = 50
+# for i in range(n):
+#     radius += random.randint(-1,10)
+#     x = radius *  math.cos(alpha*i) + w.get_x()
+#     y = radius *  math.sin(alpha*i) + w.get_y()
+#     w.add_point(Point(x, y))
+#
+# s = Shape(250,250, shape_type='complex')
+# for p in w.get_points():
+#     sc = Square(p.get_x(), p.get_y(),random.randint(1,90), random.randint(1,90),33)
+#     s.add_points(sc.get_points())
+#     for p1 in sc.get_points():
+#         ci = Circle(p1.get_x(), p1.get_y(),random.randint(10,30), random.randint(5,20))
+#         s.add_points(ci.get_points())
 
 
 #Z = np.logical_or(c.get_points_as_numpy_array(), s.get_points_as_numpy_array())
 #s.draw()
-s.draw()
+l.draw()
 #fout.write(sq+ci)
