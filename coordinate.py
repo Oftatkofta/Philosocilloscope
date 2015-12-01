@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 
 class Point(object):
+    #TODO Add color to Point
     """
     Class that represents an X/Y coordinate pair.
 
@@ -77,6 +78,7 @@ class Shape(Point):
         self.min_x = None
         self.max_y = None
         self.min_y = None
+        self.centerPoint = center_Point
 
     def __repr__(self):
         return 'Shape centered at(' + str(self.x) + ', ' + str(self.y) + ')'
@@ -99,6 +101,17 @@ class Shape(Point):
         outShape.points = outPoints
 
         return outShape
+
+
+    # def __mul__(self, other):
+    # #TODO Each point in self becomes a copy of other
+    #     outShape = Shape(self.get_center_point(), shape_type='composite')
+    #
+    #     for point in self.points:
+    #         o = Shape(point, npoints=other.get_n_points(), 'composite')
+    #         o.add_points()
+
+
 
     def get_n_points(self):
 
@@ -125,7 +138,6 @@ class Shape(Point):
         if point.get_y() < self.min_y:
             self.min_y = point.get_y()
 
-
     def add_points(self, pointlist):
         """
         :param pointlist: (list) list of Point objects to add to the shape
@@ -133,6 +145,14 @@ class Shape(Point):
         """
         for point in pointlist:
             self.add_point(point)
+
+    def get_center_point(self):
+        """
+
+        Returns: (Point) Centerpoint of Shape
+
+        """
+        return self.centerPoint
 
     def get_shape_type(self):
         """
@@ -196,6 +216,7 @@ class Shape(Point):
         for p in self.get_points():
             out[p.get_constrained_y(height-1), p.get_constrained_x(width-1)] = True
         return out
+
     def draw(self, height=256, width=256):
         """
         shows the shape as a pyplot
@@ -210,6 +231,29 @@ class Shape(Point):
         plt.imshow(RGB)
         plt.gca().invert_yaxis()
         plt.show()
+
+    def translate(self, newCenterPoint):
+        #TODO Make translate work property
+        """
+        Translates all points around a new centerpoint.
+        Args:
+            newCenterPoint: (Point) move Shape center to this point
+
+        Returns: (None)
+
+        """
+        dx = self.x - newCenterPoint.x
+        dy = self.y - newCenterPoint.y
+
+        self.centerPoint = newCenterPoint
+        self.max_x += dx
+        self.min_x += dx
+        self.max_y += dy
+        self.min_y += dy
+
+        for point in self.points:
+            point.x += dx
+            point.y += dy
 
 class Circle(Shape):
 
