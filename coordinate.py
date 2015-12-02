@@ -84,6 +84,7 @@ class Shape(Point):
         return 'Shape centered at(' + str(self.x) + ', ' + str(self.y) + ')'
 
     def __add__(self, other):
+        #Combines two shapes in to one
         outPoints = self.points + other.points
         outMaxX = max(self.max_x, other.max_x)
         outMinX = min(self.min_x, other.min_x)
@@ -125,6 +126,7 @@ class Shape(Point):
         if self.max_x == None:
             self.max_x, self.min_x = point.get_x(), point.get_x()
             self.max_y, self.min_y = point.get_y(), point.get_y()
+            self.centerPoint = point
 
         if point.get_x() > self.max_x:
             self.max_x = point.get_x()
@@ -148,7 +150,6 @@ class Shape(Point):
 
     def get_center_point(self):
         """
-
         Returns: (Point) Centerpoint of Shape
 
         """
@@ -222,6 +223,10 @@ class Shape(Point):
         shows the shape as a pyplot
         Returns: (Pyplot)
 
+        Args:
+            width: (int) Canvas width in pixels
+            height: (int) Canvas height in pixels
+
         """
         npArray = self.get_points_as_numpy_array(height, width)
         RGB = np.zeros(npArray.shape+(3,))
@@ -233,7 +238,6 @@ class Shape(Point):
         plt.show()
 
     def translate(self, newCenterPoint):
-        #TODO Make translate work property
         """
         Translates all points around a new centerpoint.
         Args:
@@ -242,10 +246,12 @@ class Shape(Point):
         Returns: (None)
 
         """
-        dx = self.x - newCenterPoint.x
-        dy = self.y - newCenterPoint.y
+        dx = newCenterPoint.x - self.x
+        dy = newCenterPoint.y - self.y
 
         self.centerPoint = newCenterPoint
+        self.x += dx
+        self.y += dy
         self.max_x += dx
         self.min_x += dx
         self.max_y += dy

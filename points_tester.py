@@ -2,6 +2,7 @@ __author__ = 'jens_e'
 
 
 from coordinate import *
+from copy import *
 import math
 import random
 import matplotlib.pyplot as plt
@@ -26,9 +27,7 @@ for i in range(c.get_n_points()):
     loop= Square(p0, 10,12, 31)
     l.add_points(ls.get_points()+poop.get_points()+loop.get_points())
 
-l = Circle(center, 40, 60)
-print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
-print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
+
 
 print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
 #
@@ -52,10 +51,13 @@ print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.ma
 
 #Z = np.logical_or(c.get_points_as_numpy_array(), s.get_points_as_numpy_array())
 #s.draw()
-
-l.draw()
-l.translate(Point(50,50))
-l.draw()
-l.translate(Point(0,0))
-l.draw()
+#l = Circle(center, 70, 99)
+print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
+print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
+testpoints = [copy(center),Point(150,150), Point(63,63), Point(50,50), Point(1,1), center]
+for p in testpoints:
+    l.translate(p)
+    print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
+    print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
+    l.draw()
 #fout.write(sq+ci)
