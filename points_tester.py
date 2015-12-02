@@ -12,24 +12,21 @@ import numpy as np
 #fout=open('DAC_shiftreg/shiftregDAC/test.ino', 'w')
 
 n=7
-center = Point(127,127)
-print "N is %d" %n
-c=Circle(center,50,n)
-o=Circle(center, 100, n)
-print "%s has %d points" %(c.get_shape_type(), c.get_n_points())
-print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(c.min_x, c.max_x, c.min_y, c.max_y)
-l = Shape(center, shape_type='complex')
-for i in range(c.get_n_points()):
-    p0 = c.points[i]
-    p1 = o.points[i]
-    ls = Line(p0, p1, 30)
-    poop = Circle(p1, 10,20)
-    loop= Square(p0, 10,12, 31)
-    l.add_points(ls.get_points()+poop.get_points()+loop.get_points())
-
-
-
-print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
+center = Point(249,249)
+# print "N is %d" %n
+# c=Circle(center,50,n)
+# o=Circle(center, 100, n)
+# print "%s has %d points" %(c.get_shape_type(), c.get_n_points())
+# print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(c.min_x, c.max_x, c.min_y, c.max_y)
+# l = Shape(center, shape_type='complex')
+# for i in range(c.get_n_points()):
+#     p0 = c.points[i]
+#     p1 = o.points[i]
+#     ls = Line(p0, p1, 30)
+#     poop = Circle(p1, 10,20)
+#     loop= Square(p0, 10,12, 31)
+#     l.add_points(ls.get_points()+poop.get_points()+loop.get_points())
+# print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
 #
 # w = Shape(250,250, shape_type='wierd')
 # alpha = 6 * math.pi / n
@@ -52,12 +49,21 @@ print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.ma
 #Z = np.logical_or(c.get_points_as_numpy_array(), s.get_points_as_numpy_array())
 #s.draw()
 #l = Circle(center, 70, 99)
+# print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
+# print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
+# testpoints = [copy(center),Point(150,150), Point(63,63), Point(50,50), Point(1,1), center]
+# for p in testpoints:
+#     l.translate(p)
+#     print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
+#     print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
+#     l.draw()
+#fout.write(sq+ci)
+
+t = Circle(center, 78, 30)
+s = Square(center,60,70,19)
+f = Line(center, Point(200,256), 10)
+l = t*t
 print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
 print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
-testpoints = [copy(center),Point(150,150), Point(63,63), Point(50,50), Point(1,1), center]
-for p in testpoints:
-    l.translate(p)
-    print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
-    print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
-    l.draw()
-#fout.write(sq+ci)
+
+l.draw(500,500)

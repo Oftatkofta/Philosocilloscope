@@ -2,6 +2,7 @@ import math
 import string
 import numpy as np
 import matplotlib.pyplot as plt
+from copy import *
 
 
 class Point(object):
@@ -104,13 +105,18 @@ class Shape(Point):
         return outShape
 
 
-    # def __mul__(self, other):
-    # #TODO Each point in self becomes a copy of other
-    #     outShape = Shape(self.get_center_point(), shape_type='composite')
-    #
-    #     for point in self.points:
-    #         o = Shape(point, npoints=other.get_n_points(), 'composite')
-    #         o.add_points()
+    def __mul__(self, other):
+
+        self.shape_type = 'composite'
+
+        out = deepcopy(self)
+
+        for point in self.points:
+            cop = deepcopy(other)
+            cop.translate(point)
+            out += cop
+
+        return out
 
 
 
