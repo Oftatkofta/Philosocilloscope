@@ -4,8 +4,9 @@ __author__ = 'jens_e'
 from coordinate import *
 from copy import *
 import math
-import random
+from random import *
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 import numpy as np
 
 
@@ -62,8 +63,26 @@ center = Point(249,249)
 t = Circle(center, 78, 30)
 s = Square(center,60,70,19)
 f = Line(center, Point(200,256), 10)
-l = t*t
+l=t*Circle(center,randint(12,80),6)
+l.sort_points()
+p1 = choice(l.points)
+for i in range(10):
+    p1 = l.points[i]
+    p2 = l.points[i+1]
+    l+= Line(p1,p2, 100)
+
+
+
+print isinstance(t, Circle)
 print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
 print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
 
-l.draw(500,500)
+#l.draw(500,500)
+t = mpimg.imread('testimage.png')
+
+t0 = binaryNumpyArrayToPoints(t)
+s = Shape(center)
+s.add_points(t0)
+s.draw()
+
+#binaryNumpyArrayToPoints(f.get_points_as_numpy_array())

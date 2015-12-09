@@ -106,6 +106,15 @@ class Shape(Point):
 
 
     def __mul__(self, other):
+        """
+        Each point in term1 Shape becomes a copy of term2 Shape
+
+        Args:
+            other: (Shape)
+
+        Returns: (Shape) of type composite, original points retained
+
+        """
 
         self.shape_type = 'composite'
 
@@ -174,6 +183,11 @@ class Shape(Point):
         :return: (list) pointlist
         """
         return self.points
+
+    def get_unique_points(self, pointlist):
+        # Order preserving
+        seen = set()
+        return [x for x in pointlist if x not in seen and not seen.add(x)]
 
     def get_sorted_points(self):
         """
@@ -400,3 +414,12 @@ class Line(Shape):
             x = self.x0 + i * dx
             y = self.y0 + i * dy
             self.add_point(Point(x, y))
+
+def binaryNumpyArrayToPoints(array):
+    nrows, ncols =  array.shape
+    out = []
+    for r in range(nrows):
+        for c in range(ncols):
+            if array[r,c]:
+                out.append(Point(r,c))
+    return out
