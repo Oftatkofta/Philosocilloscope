@@ -452,7 +452,7 @@ class Bezier(Shape):
         bernsteinPolynomials = np.array([[1, 0, 0, 0],
                                         [-3, 3, 0, 0],
                                         [3, -6, 3, 0],
-                                        [-1, 3, -3, 0]])
+                                        [-1, 3, -3, 1]])
 
         #Control point x/y values as 1x4 column matrixes
 
