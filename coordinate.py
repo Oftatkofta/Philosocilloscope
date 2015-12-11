@@ -284,7 +284,7 @@ class Shape(Point):
 class Circle(Shape):
 
     def __init__(self, origo_Point, radius, npoints):
-        Shape.__init__(self, origo_Point, npoints, 'circle')
+        Shape.__init__(self, origo_Point, npoints, 'Circle')
         self.radius = radius
         self._coordgen()
 
@@ -304,7 +304,7 @@ class Circle(Shape):
 
 class Square(Shape):
     def __init__(self, center_Point, width, heigth, npoints):
-        Shape.__init__(self, center_Point, npoints, 'square')
+        Shape.__init__(self, center_Point, npoints, 'Square')
         self.width = width
         self.height = heigth
         self._coordgen()
@@ -393,7 +393,7 @@ class Line(Shape):
         self.y1 = Point1.get_y()
         self.length = math.sqrt((self.x1-self.x0)**2+(self.y1-self.y0)**2)
         Shape.__init__(self, Point((self.x1-self.x0)/2.0,(self.y1-self.y0)/2.0)
-                       , npoints, 'line')
+                       , npoints, 'Line')
         self._coordgen()
 
     def _coordgen(self):
@@ -414,6 +414,71 @@ class Line(Shape):
             x = self.x0 + i * dx
             y = self.y0 + i * dy
             self.add_point(Point(x, y))
+
+class Bezier(Shape):
+    """
+    A quadratic bezier curve between p0 and p3 with p1 & p2 as control points
+    """
+
+    def __init__(self, p0, p1, p2, p3, npoints):
+        self.p0 = p0
+        self.p1 = p1
+        self.p2 = p2
+        self.p3 = p3
+        Shape.__init__(self, Point((p3.get_x()-p0.get_x())/2.0,
+                                   (p3.get_y()-p0.get_y())/2.0),
+                       npoints, 'Bezier')
+        self._coordgen()
+
+    def _coordgen(self):
+        """
+        Adds npoints equally spaced points along the Bezier curve.
+
+        Implementation is based on Matrix representation of quadratic Bezier
+        curves, where x(t) = [1, t, t**2, t**3] x M x P
+
+        M: 4x4 matrix with bernstein polynomial coefficients
+        P: 4x1 matrix with x/y coordinates of control points
+
+        """
+
+        #Generates a list of equally spaced t:s between 0 and 1 using linspace
+
+        tlist = list(np.linspace(0,1, self.npoints))
+
+        #A matrix containing the coefficients of the bernstein polynmials for a
+        # quadratic Bezier curve
+
+        bernsteinPolynomials = np.array([[1, 0, 0, 0],
+                                        [-3, 3, 0, 0],
+                                        [3, -6, 3, 0],
+                                        [-1, 3, -3, 0]])
+
+        #Control point x/y values as 1x4 column matrixes
+
+        controlX = np.array([[self.p0.get_x()],
+                             [self.p1.get_x()],
+                             [self.p2.get_x()],
+                             [self.p3.get_x()]])
+
+
+        controlY = np.array([[self.p0.get_y()],
+                             [self.p1.get_y()],
+                             [self.p2.get_y()],
+                             [self.p3.get_y()]])
+
+        for t in tlist:
+            tarray = np.array([1, t, t**2, t**3])
+
+            x = tarray.dot(bernsteinPolynomials).dot(controlX)
+            y = tarray.dot(bernsteinPolynomials).dot(controlY)
+
+            self.add_point(Point(x, y))
+
+
+
+
+
 
 def binaryNumpyArrayToPoints(array):
     nrows, ncols =  array.shape

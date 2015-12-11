@@ -12,77 +12,28 @@ import numpy as np
 
 #fout=open('DAC_shiftreg/shiftregDAC/test.ino', 'w')
 
-n=7
-center = Point(249,249)
-# print "N is %d" %n
-# c=Circle(center,50,n)
-# o=Circle(center, 100, n)
-# print "%s has %d points" %(c.get_shape_type(), c.get_n_points())
-# print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(c.min_x, c.max_x, c.min_y, c.max_y)
-# l = Shape(center, shape_type='complex')
-# for i in range(c.get_n_points()):
-#     p0 = c.points[i]
-#     p1 = o.points[i]
-#     ls = Line(p0, p1, 30)
-#     poop = Circle(p1, 10,20)
-#     loop= Square(p0, 10,12, 31)
-#     l.add_points(ls.get_points()+poop.get_points()+loop.get_points())
-# print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
-#
-# w = Shape(250,250, shape_type='wierd')
-# alpha = 6 * math.pi / n
-# radius = 50
-# for i in range(n):
-#     radius += random.randint(-1,10)
-#     x = radius *  math.cos(alpha*i) + w.get_x()
-#     y = radius *  math.sin(alpha*i) + w.get_y()
-#     w.add_point(Point(x, y))
-#
-# s = Shape(250,250, shape_type='complex')
-# for p in w.get_points():
-#     sc = Square(p.get_x(), p.get_y(),random.randint(1,90), random.randint(1,90),33)
-#     s.add_points(sc.get_points())
-#     for p1 in sc.get_points():
-#         ci = Circle(p1.get_x(), p1.get_y(),random.randint(10,30), random.randint(5,20))
-#         s.add_points(ci.get_points())
+center = Point(127,127)
 
+p0 = Point(0,0)
+p1 = Point(0,255)
+p2 = Point(255, 255)
+p3 = Point(255, 0)
 
-#Z = np.logical_or(c.get_points_as_numpy_array(), s.get_points_as_numpy_array())
-#s.draw()
-#l = Circle(center, 70, 99)
-# print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
-# print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
-# testpoints = [copy(center),Point(150,150), Point(63,63), Point(50,50), Point(1,1), center]
-# for p in testpoints:
-#     l.translate(p)
-#     print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
-#     print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
-#     l.draw()
-#fout.write(sq+ci)
+p4 = Point(0,127)
+p5 = Point(127,0)
 
-t = Circle(center, 78, 30)
-s = Square(center,60,70,19)
-f = Line(center, Point(200,256), 10)
-l=t*Circle(center,randint(12,80),6)
-l.sort_points()
-p1 = choice(l.points)
-for i in range(10):
-    p1 = l.points[i]
-    p2 = l.points[i+1]
-    l+= Line(p1,p2, 100)
+l1 = Line(p1,p2,20)
+l2 = Line(p0,p3,20)
 
+l=l1+l2
 
-
-print isinstance(t, Circle)
+for i in range(l1.get_n_points()):
+        p0=l1.points[i]
+        p3=l2.points[i]
+        b = Bezier(p0, p4, p5, p3, 100)
+        l += b
 print "%s has %d points" %(l.get_shape_type(), l.get_n_points())
 print "minX: %s, maxX: %s, minY: %s, maxY: %s" %(l.min_x, l.max_x, l.min_y, l.max_y)
-
-#l.draw(500,500)
-t = mpimg.imread('testimage.png')
-
-t0 = binaryNumpyArrayToPoints(t)
-s = Shape(center)
-s.add_points(t0)
-s.draw()
+l.draw()
 
 #binaryNumpyArrayToPoints(f.get_points_as_numpy_array())
