@@ -13,6 +13,11 @@ import numpy as np
 #fout=open('DAC_shiftreg/shiftregDAC/test.ino', 'w')
 
 center = Point(127,127)
+p0 = Point(0,0)
+p1 = Point(0,255)
+p2 = Point(255, 255)
+p3 = Point(255, 0)
+
 def funkyFunction():
     p0 = Point(0,0)
     p1 = Point(0,255)
@@ -20,15 +25,15 @@ def funkyFunction():
     p3 = Point(255, 0)
 
     p4 = Point(0,127)
-    p5 = Point(255,127)
-    p6 = Point(127, 255)
+    p5 = Point(127,255)
+    p6 = Point(255, 127)
     p7 = Point(127,0)
 
 
     l1 = Line(p1,p2,20)
     l2 = Line(p0,p3,20)
     l3 = Line(p0,p1,20)
-    l4 = Line(p2,p3,20)
+    l4 = Line(p3,p2,20)
 
     l=l1+l2+l3+l4
 
@@ -47,4 +52,38 @@ def funkyFunction():
 
 #binaryNumpyArrayToPoints(f.get_points_as_numpy_array())
 
-funkyFunction()
+def beziercle():
+    p0 = Point(0,0)
+    p1 = Point(0,255)
+    p2 = Point(255, 255)
+    p3 = Point(255, 0)
+
+    c = Bezier(p0,p3,p1,p2, 13)
+    o = Shape(center)
+
+    b = Square(center,123,45,79)
+    t=c.get_points()
+    for i in xrange(1,c.get_n_points()-4):
+
+        b = Bezier(t[i+1], t[i], t[i+3], t[i+2],10)
+
+        o += b
+    o.draw()
+
+def rotate_tester(degrees):
+
+    l = Square(center, 45, 150, 67)
+    s = Square(center, 45, 150, 67)
+    l.set_origin(center)
+    l.rotate(math.radians(degrees))
+
+    s+=l
+
+    s.draw()
+
+c = Circle(center, 50, 33)
+s = Square(center, 10, 10, 13)
+l = Line(p0, p2, 13)
+b = Line(center, p3, 40)
+
+rotate_tester(-89)

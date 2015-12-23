@@ -70,8 +70,10 @@ class Point(object):
 
 
 class Shape(Point):
+
     def __init__(self, center_Point, npoints=0, shape_type='NA'):
         Point.__init__(self, center_Point.get_x(), center_Point.get_y())
+
         self.shape_type = shape_type
         self.points = []
         self.npoints = npoints
@@ -79,7 +81,8 @@ class Shape(Point):
         self.min_x = None
         self.max_y = None
         self.min_y = None
-        self.centerPoint = center_Point
+        self.centerpoint = center_Point
+        self.originPoint = center_Point
 
     def __repr__(self):
         return 'Shape centered at(' + str(self.x) + ', ' + str(self.y) + ')'
@@ -87,10 +90,18 @@ class Shape(Point):
     def __add__(self, other):
         #Combines two shapes in to one
         outPoints = self.points + other.points
-        outMaxX = max(self.max_x, other.max_x)
-        outMinX = min(self.min_x, other.min_x)
-        outMaxY = max(self.max_y, other.max_y)
-        outMinY = min(self.min_y, other.min_y)
+        try:
+            outMaxX = max(self.max_x, other.max_x)
+            outMinX = min(self.min_x, other.min_x)
+            outMaxY = max(self.max_y, other.max_y)
+            outMinY = min(self.min_y, other.min_y)
+
+        #In case you add to an empty Shape
+        finally:
+            outMaxX = other.max_x
+            outMinX = other.min_x
+            outMaxY = other.max_y
+            outMinY = other.min_y
 
         outCenter = Point(outMaxX-outMinX, outMaxY-outMinY)
 
@@ -189,6 +200,13 @@ class Shape(Point):
         seen = set()
         return [x for x in pointlist if x not in seen and not seen.add(x)]
 
+    def get_origin_point(self):
+        """
+        Returns: (Point) Origin point of Shape
+
+        """
+        return self.originPoint
+
     def get_sorted_points(self):
         """
         :return:
@@ -198,13 +216,6 @@ class Shape(Point):
         return sorted(self.points,
                       key=lambda point: math.sqrt(point.x ** 2 + point.y ** 2))
 
-    def sort_points(self):
-        """ Sorts the pointlist in place on distance from Origo (0,0)
-        :return:
-        None
-        """
-        self.points.sort(
-            key=lambda point: math.sqrt(point.x ** 2 + point.y ** 2))
 
     def get_points_as_C_array(self, variablename):
         """
@@ -257,6 +268,66 @@ class Shape(Point):
         plt.gca().invert_yaxis()
         plt.show()
 
+
+    def rotate(self, angle):
+        """
+        Rotates Shape around its origin Point.
+
+        Positive angles give clockwise rotations.
+
+        Returns: Nothing, modifies Shape in place
+
+        Args:
+            (float) or (int) angle: rotational angle in radians
+
+        """
+        origin = self.originPoint
+
+        x0 = origin.get_x()
+        y0 = origin.get_y()
+
+        cos = math.cos(angle)
+        sin = math.sin(angle)
+
+        for i in xrange(len(self.points)):
+
+            p = self.points[i]
+
+            x1 = p.get_x()
+            y1 = p.get_y()
+
+            dx = x1 - x0
+            dy = y1 - y0
+
+            dx = dx * cos + dy * -sin
+            dy = dx * sin + dy * cos
+
+            self.points[i] = Point(dx + x0, dy + y0)
+
+    def set_origin(self, point):
+        """
+        Sets the point which all object translations, rotations, scalings,
+        and shearings are relative to.
+
+
+        Args:
+            point: Point object to relate all Shape transformations to.
+
+        Returns:
+
+        """
+        self.originPoint = point
+
+
+
+    def sort_points(self):
+        """ Sorts the pointlist in place on distance from Origo (0,0)
+        :return:
+        None
+        """
+        self.points.sort(
+            key=lambda point: math.sqrt(point.x ** 2 + point.y ** 2))
+
     def translate(self, newCenterPoint):
         """
         Translates all points around a new centerpoint.
@@ -296,7 +367,7 @@ class Circle(Shape):
         """
         alpha = 2 * math.pi / self.npoints
 
-        for i in range(self.npoints):
+        for i in xrange(self.npoints):
             x = self.radius *  math.cos(alpha*i) + self.x
             y = self.radius *  math.sin(alpha*i) + self.y
             self.add_point(Point(x, y))
@@ -338,7 +409,7 @@ class Square(Shape):
         x = x0
         y = y0
 
-        for i in range(npoints):
+        for i in xrange(npoints):
 
             if i < int(nVpoints):
                 self.add_point(Point(x,y))
@@ -410,7 +481,7 @@ class Line(Shape):
         dy = float(self.y1-self.y0)/(self.npoints-1)
         x = self.x0
         y = self.y0
-        for i in range(self.npoints):
+        for i in xrange(self.npoints):
             x = self.x0 + i * dx
             y = self.y0 + i * dy
             self.add_point(Point(x, y))
@@ -473,7 +544,7 @@ class Bezier(Shape):
             x = tarray.dot(bernsteinPolynomials).dot(controlX)
             y = tarray.dot(bernsteinPolynomials).dot(controlY)
 
-            self.add_point(Point(x, y))
+            self.add_point(Point(float(x), float(y)))
 
 
 
@@ -483,8 +554,8 @@ class Bezier(Shape):
 def binaryNumpyArrayToPoints(array):
     nrows, ncols =  array.shape
     out = []
-    for r in range(nrows):
-        for c in range(ncols):
+    for r in xrange(nrows):
+        for c in xrange(ncols):
             if array[r,c]:
                 out.append(Point(r,c))
     return out
