@@ -74,9 +74,10 @@ def rotate_tester(degrees):
 
     l = Square(center, 45, 150, 67)
     s = Square(center, 45, 150, 67)
+    s.set_origin(center)
     l.set_origin(center)
-    l.rotate(math.radians(degrees))
 
+    l.rotate(math.radians(degrees))
     s+=l
 
     s.draw()
@@ -84,6 +85,7 @@ def rotate_tester(degrees):
 c = Circle(center, 50, 33)
 s = Square(center, 10, 10, 13)
 l = Line(p0, p2, 13)
-b = Line(center, p3, 40)
 
-rotate_tester(-89)
+c = c * s + l
+
+c.draw()

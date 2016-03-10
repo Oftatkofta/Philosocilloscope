@@ -328,19 +328,19 @@ class Shape(Point):
         self.points.sort(
             key=lambda point: math.sqrt(point.x ** 2 + point.y ** 2))
 
-    def translate(self, newCenterPoint):
+    def translate(self, translateToPoint):
         """
         Translates all points around a new centerpoint.
         Args:
-            newCenterPoint: (Point) move Shape center to this point
+            translateToPoint: (Point) move Shape center to this point
 
         Returns: (None)
 
         """
-        dx = newCenterPoint.x - self.x
-        dy = newCenterPoint.y - self.y
+        dx = translateToPoint.x - self.originPoint.x
+        dy = translateToPoint.y - self.originPoint.y
 
-        self.centerPoint = newCenterPoint
+        self.originPoint = translateToPoint
         self.x += dx
         self.y += dy
         self.max_x += dx
