@@ -1,5 +1,11 @@
 __author__ = 'jens_e'
-
+"""
+MR = GPOI18; Master Clear, active low
+DS = GPIO17; Serial data input
+OE = GPIO27; Output Enable, active low
+ST_CP = GPIO22; latch
+SH_CP = GPIO4; clock
+"""
 
 from coordinate import *
 from copy import *
