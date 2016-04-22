@@ -78,6 +78,7 @@ def funkyFunction(npoints):
 
 for i in range(10000):
     shiftOut(Point(i%255,i%255))
+    time.sleep(0.01)
 
 if not dryrunFlag:
     print("Cleaning up GPIO")
