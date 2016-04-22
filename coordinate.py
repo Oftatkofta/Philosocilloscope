@@ -268,9 +268,11 @@ class Shape(Point):
         plt.imshow(RGB)
         plt.gca().invert_yaxis()
         plt.show()
+        return plt
 
-    def sendToDAC(self, height=256, width=256):
-        #TODO shift the shape coordinates to DAC
+    #def sendToDAC(self, height=256, width=256):
+
+    #TODO shift the shape coordinates to DAC
 
     def rotate(self, angle):
         """
