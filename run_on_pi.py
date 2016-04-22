@@ -1,4 +1,4 @@
-
+from __future__ import print_function
 try:
     import RPi.GPIO as GPIO
     dryrunFlag = False
@@ -40,12 +40,15 @@ def shiftOut(Point):
     binary_representation = bin(x)[2:].zfill(8)+bin(y)[2:].zfill(8)
 
     GPIO.output(latchPin, 0)
+    print("shifting: ", binary_representation)
     for bit in binary_representation:
         GPIO.output(clockPin, 1)
         GPIO.output(serialDataPin, 1)
         GPIO.output(clockPin, 0)
 
     GPIO.output(latchPin, 1)
+
+    time.sleep(15)
 
 
 
@@ -75,4 +78,5 @@ def funkyFunction(npoints):
 shiftOut(Point(128,128))
 
 if not dryrunFlag:
+    print("Cleaning up GPIO")
     GPIO.cleanup()
