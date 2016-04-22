@@ -49,3 +49,8 @@ Temporary Items
 _idea
 /.idea/
 .idea
+*.xml
+
+.idea/workspace.xml
+
+*.xml

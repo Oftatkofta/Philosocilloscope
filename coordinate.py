@@ -259,6 +259,7 @@ class Shape(Point):
             height: (int) Canvas height in pixels
 
         """
+
         npArray = self.get_points_as_numpy_array(height, width)
         RGB = np.zeros(npArray.shape+(3,))
 
@@ -268,6 +269,8 @@ class Shape(Point):
         plt.gca().invert_yaxis()
         plt.show()
 
+    def sendToDAC(self, height=256, width=256):
+        #TODO shift the shape coordinates to DAC
 
     def rotate(self, angle):
         """
