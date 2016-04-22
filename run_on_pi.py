@@ -40,6 +40,7 @@ def shiftOut(Point):
     binary_representation = bin(x)[2:].zfill(8)+bin(y)[2:].zfill(8)
 
     GPIO.output(latchPin, 0)
+
     print("shifting: ", binary_representation)
     for bit in binary_representation:
         GPIO.output(clockPin, 1)
@@ -48,7 +49,7 @@ def shiftOut(Point):
 
     GPIO.output(latchPin, 1)
 
-    time.sleep(15)
+    #time.sleep(15)
 
 
 
@@ -75,7 +76,8 @@ def funkyFunction(npoints):
 
     return l
 
-shiftOut(Point(128,128))
+for i in range(10000):
+    shiftOut(Point(i%255,i%255))
 
 if not dryrunFlag:
     print("Cleaning up GPIO")
