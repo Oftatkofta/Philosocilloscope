@@ -8,7 +8,7 @@ except ImportError:
 import time
 from coordinate import *
 """
-MR = GPOI18, 12; Master Clear, active low
+MR = GPIO18, 12; Master Clear, active low
 DS = GPIO17, 11; Serial data input
 OE = GPIO27, 13; Output Enable, active low
 ST_CP = GPIO22, 15; latch
@@ -16,16 +16,16 @@ SH_CP = GPIO4, 7; clock
 """
 if not dryrunFlag:
     GPIO.setmode(GPIO.BOARD)
-    masterClearPin = 12
+    masterResetPin = 12
     outputEnablePin = 13
     serialDataPin = 11
     latchPin = 15
     clockPin = 7
     GPIO.setwarnings(False) #For ease of debugging
-    GPIO.setup(masterClearPin, GPIO.OUT, initial=GPIO.HIGH)
+    GPIO.setup(masterResetPin, GPIO.OUT, initial=GPIO.HIGH)
     GPIO.setup(outputEnablePin, GPIO.OUT, initial=GPIO.LOW)
     GPIO.setup([serialDataPin, latchPin, clockPin], GPIO.OUT, initial=GPIO.LOW)
-    channels_in_use = [masterClearPin, outputEnablePin, serialDataPin, latchPin, clockPin]
+    channels_in_use = [masterResetPin, outputEnablePin, serialDataPin, latchPin, clockPin]
 
 def shiftOut(Point):
     """
@@ -45,8 +45,9 @@ def shiftOut(Point):
 
     print("shifting: ", binary_representation)
     for bit in binary_representation:
+        GPIO.output(serialDataPin, int(bit))
         GPIO.output(clockPin, 1)
-        GPIO.output(serialDataPin, 1)
+        time.sleep(0.0001)
         GPIO.output(clockPin, 0)
 
     GPIO.output(latchPin, 1)
