@@ -84,7 +84,7 @@ square = funkyFunction(20)
 for i in range(10000):
     for p in square.get_points():
         shiftOut(p)
-        time.sleep(0.01)
+        time.sleep(0.001)
 
 if not dryrunFlag:
     print("Cleaning up GPIO")
