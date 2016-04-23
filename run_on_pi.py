@@ -24,6 +24,7 @@ if not dryrunFlag:
     GPIO.setup(masterClearPin, GPIO.OUT, initial=GPIO.HIGH)
     GPIO.setup(outputEnablePin, GPIO.OUT, initial=GPIO.LOW)
     GPIO.setup([serialDataPin, latchPin, clockPin], GPIO.OUT, initial=GPIO.LOW)
+    channels_in_use = [masterClearPin, outputEnablePin, serialDataPin, latchPin, clockPin]
 
 def shiftOut(Point):
     """
@@ -76,10 +77,12 @@ def funkyFunction(npoints):
 
     return l
 
+square = funkyFunction(20)
+
 for i in range(10000):
-    shiftOut(Point(i%255,i%255))
-    time.sleep(0.01)
+    for p in square.get_points():
+            time.sleep(0.01)
 
 if not dryrunFlag:
     print("Cleaning up GPIO")
-    GPIO.cleanup()
+    GPIO.cleanup(channels_in_use)
