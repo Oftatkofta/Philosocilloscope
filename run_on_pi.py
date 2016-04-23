@@ -21,6 +21,7 @@ if not dryrunFlag:
     serialDataPin = 11
     latchPin = 15
     clockPin = 7
+    GPIO.setwarnings(False) #For ease of debugging
     GPIO.setup(masterClearPin, GPIO.OUT, initial=GPIO.HIGH)
     GPIO.setup(outputEnablePin, GPIO.OUT, initial=GPIO.LOW)
     GPIO.setup([serialDataPin, latchPin, clockPin], GPIO.OUT, initial=GPIO.LOW)
