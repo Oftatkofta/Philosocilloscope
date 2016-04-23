@@ -79,11 +79,11 @@ def funkyFunction(npoints):
     l3 = Line(p0,p1,npoints)
     l4 = Line(p3,p2,npoints)
 
-    l=l1+l2+l3+l4
+    l=Circle(Point(127,127),127,npoints)
 
     return l
 
-square = funkyFunction(20)
+square = funkyFunction(200)
 
 for i in range(10000):
     for p in square.get_points():
