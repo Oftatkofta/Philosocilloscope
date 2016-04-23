@@ -27,6 +27,10 @@ if not dryrunFlag:
     GPIO.setup([serialDataPin, latchPin, clockPin], GPIO.OUT, initial=GPIO.LOW)
     channels_in_use = [masterResetPin, outputEnablePin, serialDataPin, latchPin, clockPin]
 
+def latch():
+    GPIO.output(latchPin, 1)
+    GPIO.output(latchPin, 0)
+
 def shiftOut(Point):
     """
     Sends point coodinates out to an 8-bit DAC. X as high byte, Y as low byte.
@@ -41,16 +45,16 @@ def shiftOut(Point):
     y=Point.get_constrained_y()
     binary_representation = bin(x)[2:].zfill(8)+bin(y)[2:].zfill(8)
 
-    GPIO.output(latchPin, 0)
+
 
     print("shifting: ", binary_representation)
     for bit in binary_representation:
-        GPIO.output(serialDataPin, int(bit))
         GPIO.output(clockPin, 1)
-        time.sleep(0.0001)
+        GPIO.output(serialDataPin, int(bit))
         GPIO.output(clockPin, 0)
+    latch()
 
-    GPIO.output(latchPin, 1)
+
 
     #time.sleep(15)
 
