@@ -7,13 +7,15 @@ except ImportError:
     dryrunFlag = True
 import time
 from coordinate import *
+
 """
 MR = GPIO18, 12; Master Clear, active low
 DS = GPIO17, 11; Serial data input
 OE = GPIO27, 13; Output Enable, active low
-ST_CP = GPIO22, 15; latch
+ST_CP = GPIO22, 15; latch 22pF ceramic capacitor to GND
 SH_CP = GPIO4, 7; clock
 """
+
 if not dryrunFlag:
     GPIO.setmode(GPIO.BOARD)
     masterResetPin = 12
@@ -22,13 +24,20 @@ if not dryrunFlag:
     latchPin = 15
     clockPin = 7
     GPIO.setwarnings(False) #For ease of debugging
-    GPIO.setup(masterResetPin, GPIO.OUT, initial=GPIO.HIGH)
+    GPIO.setup(masterResetPin, GPIO.OUT, initial=GPIO.LOW)
     GPIO.setup(outputEnablePin, GPIO.OUT, initial=GPIO.LOW)
     GPIO.setup([serialDataPin, latchPin, clockPin], GPIO.OUT, initial=GPIO.LOW)
     channels_in_use = [masterResetPin, outputEnablePin, serialDataPin, latchPin, clockPin]
+    GPIO.output(masterResetPin, 1)
+
+def reset():
+    GPIO.output(masterResetPin, 0)
+    time.sleep(0.001)
+    GPIO.output(masterResetPin, 1)
 
 def latch():
     GPIO.output(latchPin, 1)
+    time.sleep(0.001)
     GPIO.output(latchPin, 0)
 
 def shiftOut(Point):
@@ -46,12 +55,16 @@ def shiftOut(Point):
     binary_representation = bin(x)[2:].zfill(8)+bin(y)[2:].zfill(8)
 
 
-
+    #reset()
     print("shifting: ", binary_representation)
     for bit in binary_representation:
-        GPIO.output(clockPin, 1)
         GPIO.output(serialDataPin, int(bit))
+        GPIO.output(clockPin, 1)
+        time.sleep(0.001)
+        #latch()
+        #GPIO.output(serialDataPin, int(bit))
         GPIO.output(clockPin, 0)
+    
     latch()
 
 
@@ -85,10 +98,10 @@ def funkyFunction(npoints):
 
 square = funkyFunction(200)
 
-for i in range(10000):
-    for p in square.get_points():
-        shiftOut(p)
-        time.sleep(0.001)
+for i in range(3):
+    for i in range(256):
+        shiftOut(Point(i,i))
+        time.sleep(0.01)
 
 if not dryrunFlag:
     print("Cleaning up GPIO")
