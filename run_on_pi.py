@@ -34,6 +34,7 @@ def reset():
     GPIO.output(masterResetPin, 0)
     time.sleep(0.001)
     GPIO.output(masterResetPin, 1)
+    GPIO.output(outputEnablePin, 0)
 
 def latch():
     GPIO.output(latchPin, 1)
@@ -50,12 +51,13 @@ def shiftOut(Point):
     Returns: None
 
     """
+    reset()
     x=Point.get_constrained_x()
     y=Point.get_constrained_y()
     binary_representation = bin(x)[2:].zfill(8)+bin(y)[2:].zfill(8)
 
 
-    #reset()
+   
     print("shifting: ", binary_representation)
     for bit in binary_representation:
         GPIO.output(serialDataPin, int(bit))
@@ -98,10 +100,10 @@ def funkyFunction(npoints):
 
 square = funkyFunction(200)
 
-for i in range(3):
-    for i in range(256):
-        shiftOut(Point(i,i))
-        time.sleep(0.01)
+for x in range(255,0,-10):
+    for y in range(255,0,-10):
+        shiftOut(Point(x,y))
+        #time.sleep(0.01)
 
 if not dryrunFlag:
     print("Cleaning up GPIO")
