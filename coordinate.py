@@ -198,10 +198,10 @@ class Shape(Point):
         """
         return self.points
 
-    def get_unique_points(self, pointlist=self.points):
+    def get_unique_points(self):
         # Order preserving
         seen = set()
-        return [x for x in pointlist if x not in seen and not seen.add(x)]
+        return [x for x in self.points if x not in seen and not seen.add(x)]
 
     def get_origin_point(self):
         """
