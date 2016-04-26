@@ -70,6 +70,9 @@ class Point(object):
 
 
 class Shape(Point):
+    """
+    A Shape Object is a collection of Points
+    """
 
     def __init__(self, center_Point, npoints=0, shape_type='NA'):
         Point.__init__(self, center_Point.get_x(), center_Point.get_y())
@@ -118,7 +121,7 @@ class Shape(Point):
 
     def __mul__(self, other):
         """
-        Each point in term1 Shape becomes a copy of term2 Shape
+        Each point in term_1 Shape becomes a copy of term_2 Shape
 
         Args:
             other: (Shape)
@@ -195,7 +198,7 @@ class Shape(Point):
         """
         return self.points
 
-    def get_unique_points(self, pointlist):
+    def get_unique_points(self, pointlist=self.points):
         # Order preserving
         seen = set()
         return [x for x in pointlist if x not in seen and not seen.add(x)]
