@@ -2,6 +2,7 @@ import math
 import string
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 from copy import *
 
 
@@ -567,3 +568,10 @@ def binaryNumpyArrayToPoints(array):
             if array[r,c]:
                 out.append(Point(r,c))
     return out
+
+def imageToShape(image_filename):
+    arr = mpimg.imread(image_filename)
+    points = binaryNumpyArrayToPoints(arr)
+    outShape=Shape(Point(127,127))
+    outShape.add_points(points)
+    return outShape

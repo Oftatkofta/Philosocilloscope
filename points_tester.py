@@ -88,10 +88,6 @@ def rotate_tester(degrees):
 
     s.draw()
 
-c = Circle(center, 50, 33)
-s = Square(center, 10, 10, 13)
-l = Line(p0, p2, 13)
+t=imageToShape("testimage.tif")
+t.draw()
 
-c = c * s + l
-
-c.draw()
