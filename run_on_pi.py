@@ -14,7 +14,7 @@ DS = GPIO17, pin11; Serial data input
 OE = GPIO27, pin13; Output Enable, active low
 ST_CP = GPIO22, pin15; latch 22pF ceramic capacitor to GND
 SH_CP = GPI23, pin16; clock
-Q7' = utput from last register, connected to GPIOx, pinX to
+
 """
 
 if not dryrunFlag:
@@ -82,18 +82,20 @@ def shiftOut(Point):
 po=Point(0,0)
 pt=Point(255,255)
 pc=Point(127,127)
-#for i in xrange(0,255):
-#    p1=Point(0,i)
-#    p2=Point(i,0)
-#    l=Bezier(p1,pc,po,p2,5)
-#    for p in l.get_points():
-#        shiftOut(p)
+l=Shape(po)
+for i in xrange(0,1000):
+    p1=Point(0,i)
+    p2=Point(i,0)
+    b=Bezier(po,p1,p2,pt,19)
+    l+=b
+for p in l.get_points():
+    shiftOut(p)
         #time.sleep(0.01)
 
 #reset()
-s=imageToShape("testimage.tif")
-for p in s.get_points():
-    shiftOut(p)
+#s=imageToShape("testimage.tif")
+#for p in s.get_points():
+#    shiftOut(p)
 
 if not dryrunFlag:
     print("Cleaning up GPIO")
