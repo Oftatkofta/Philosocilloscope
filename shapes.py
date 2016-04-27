@@ -72,10 +72,13 @@ class Point(object):
 
 class Shape(Point):
     """
-    A Shape Object is a collection of Points
+    A Shape Object is a subclass of Point and may contain an arbritrary number
+    of points in any configuration. A Shape has several methods to manipulate
+    and display it, which include overloaded addition and multiplocation
+    operators.
     """
 
-    def __init__(self, center_Point, npoints=0, shape_type='NA'):
+    def __init__(self, center_Point=Point(0,0), npoints=0, shape_type='NA'):
         Point.__init__(self, center_Point.get_x(), center_Point.get_y())
 
         self.shape_type = shape_type
@@ -85,14 +88,14 @@ class Shape(Point):
         self.min_x = None
         self.max_y = None
         self.min_y = None
-        self.centerpoint = center_Point
-        self.originPoint = center_Point
+        self.centerPoint = center_Point #Center of the bounding rectangle
+        self.originPoint = center_Point #Pivot point for translations
 
     def __repr__(self):
         return 'Shape centered at(' + str(self.x) + ', ' + str(self.y) + ')'
 
     def __add__(self, other):
-        #Combines two shapes in to one
+        #Combines two shapes in to one by concatenating their points
         outPoints = self.points + other.points
         try:
             outMaxX = max(self.max_x, other.max_x)
@@ -127,7 +130,7 @@ class Shape(Point):
         Args:
             other: (Shape)
 
-        Returns: (Shape) of type composite, original points retained
+        Returns: (Shape) of type composite, original shapes are retained
 
         """
 
@@ -152,23 +155,27 @@ class Shape(Point):
 
         self.points.append(point)
 
+        x_in = point.get_x()
+        y_in = point.get_y()
 
         if self.max_x == None:
-            self.max_x, self.min_x = point.get_x(), point.get_x()
-            self.max_y, self.min_y = point.get_y(), point.get_y()
+            self.max_x, self.min_x, self.x = x_in, x_in, x_in
+            self.max_y, self.min_y, self.y = y_in, y_in, y_in
             self.centerPoint = point
 
-        if point.get_x() > self.max_x:
-            self.max_x = point.get_x()
+        if x_in > self.max_x:
+            self.max_x = x_in
 
-        if point.get_y() > self.max_y:
-            self.max_y = point.get_y()
+        if y_in > self.max_y:
+            self.max_y = y_in
 
-        if point.get_x() < self.min_x:
-            self.min_x = point.get_x()
+        if x_in < self.min_x:
+            self.min_x = x_in
 
-        if point.get_y() < self.min_y:
-            self.min_y = point.get_y()
+        if y_in < self.min_y:
+            self.min_y = y_in
+
+        self.npoints = len(self.points)
 
     def add_points(self, pointlist):
         """
@@ -206,12 +213,14 @@ class Shape(Point):
 
     def get_origin_point(self):
         """
-        Returns: (Point) Origin point of Shape
+        Returns: (Point) Origin point of Shape, used as pivot for
+        transformations
 
         """
         return self.originPoint
 
     def get_sorted_points(self):
+        #TODO add arbritrary point to sort from
         """
         :return:
         (list) Points sorted on distance from Origo (0,0)
@@ -223,6 +232,8 @@ class Shape(Point):
 
     def get_points_as_C_array(self, variablename):
         """
+        This method is good in case you want to generate some shapes for
+        an Arduino.
 
         :return: (str) Points as a C-array consisting of 16-bit words
         with x coordinate as MSB, and y as LSB ends with newline.
@@ -248,10 +259,11 @@ class Shape(Point):
 
         """
 
-        out = np.zeros((height,width),dtype = bool)
+        outArray = np.zeros((height,width),dtype = bool)
         for p in self.get_points():
             out[p.get_constrained_y(height-1), p.get_constrained_x(width-1)] = True
-        return out
+
+        return outArray
 
     def draw(self, height=256, width=256):
         """
@@ -311,7 +323,24 @@ class Shape(Point):
             dx = dx * cos + dy * -sin
             dy = dx * sin + dy * cos
 
-            self.points[i] = Point(dx + x0, dy + y0)
+            new_x = dx + x0
+            new_y = dy + y0
+            self.points[i] = Point(new_x, new_y)
+
+            if new_x > self.max_x:
+                self.max_x = new_x
+
+            if new_y > self.max_y:
+                self.max_y = new_y
+
+            if new_x < self.min_x:
+                self.min_x = new_x
+
+            if new_y < self.min_y:
+                self.min_y = new_y
+
+        self.centerPoint = Point((self.max_x - self.min_x)/2.0,
+                                 (self.max_y - self.min_y)/2.0)
 
     def set_origin(self, point):
         """
@@ -377,8 +406,8 @@ class Circle(Shape):
         alpha = 2 * math.pi / self.npoints
 
         for i in xrange(self.npoints):
-            x = self.radius *  math.cos(alpha*i) + self.x
-            y = self.radius *  math.sin(alpha*i) + self.y
+            x = self.radius * math.cos(alpha*i) + self.x
+            y = self.radius * math.sin(alpha*i) + self.y
             self.add_point(Point(x, y))
 
 
@@ -481,7 +510,7 @@ class Line(Shape):
         Adds npoints equally spaced points along the line.
 
         """
-
+        npoints = int(self.npoints)
         #First we add the endpoints
         #self.add_point(Point(self.x0, self.y0))
         #self.add_point(Point(self.x1, self.y1))
@@ -490,7 +519,7 @@ class Line(Shape):
         dy = float(self.y1-self.y0)/(self.npoints-1)
         x = self.x0
         y = self.y0
-        for i in xrange(self.npoints):
+        for i in xrange(npoints):
             x = self.x0 + i * dx
             y = self.y0 + i * dy
             self.add_point(Point(x, y))

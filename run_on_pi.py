@@ -6,7 +6,7 @@ except ImportError:
     print('no GPIO, dry run')
     dryrunFlag = True
 import time
-from coordinate import *
+from shapes import *
 
 """
 MR = GPIO18, pin12; Master Clear, active low

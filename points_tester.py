@@ -7,7 +7,7 @@ ST_CP = GPIO22; latch
 SH_CP = GPIO4; clock
 """
 
-from coordinate import *
+from shapes import *
 from copy import *
 import math
 from random import *
