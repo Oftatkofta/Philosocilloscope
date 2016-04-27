@@ -91,15 +91,9 @@ pc=Point(127,127)
         #time.sleep(0.01)
 
 #reset()
-c=Circle(pc,127,24)
-for i in xrange(30):
-    for p in c.get_sorted_points():
-    
-        s=Line(pc,p,12)+c
-        for p in s.get_sorted_points():
-            shiftOut(p)
-
-
+s=imageToShape("testimage.tif")
+for p in s.get_points():
+    shiftOut(p)
 
 if not dryrunFlag:
     print("Cleaning up GPIO")
