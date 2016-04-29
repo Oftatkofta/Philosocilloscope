@@ -57,6 +57,18 @@ class Point(object):
         """
         return max(min(self.get_rounded_y(), max_y), 0)
 
+    def calculate_distance(self, other=Point(0,0)):
+        """
+        Calculates the distance between the point and another.
+        Args:
+            other: Ppint object or Shape
+
+        Returns:
+            float
+
+        """
+
+        return math.sqrt(abs(self.x-other.x) ** 2 + abs(self.y-other.y) ** 2)
 
     def __str__(self):
         return '<' + str(self.get_x()) + ',' + str(self.get_y()) + '>'
@@ -603,10 +615,6 @@ class Bezier(Shape):
             y = tarray.dot(bernsteinPolynomials).dot(controlY)
 
             self.add_point(Point(float(x), float(y)))
-
-
-
-
 
 
 def binaryNumpyArrayToPoints(array):
