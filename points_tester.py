@@ -85,9 +85,7 @@ def rotate_tester(degrees):
 
     l.rotate(math.radians(degrees))
     s+=l
-
+    s.scale(1.5,1)
     s.draw()
 
-t=imageToShape("testimage.tif")
-t.draw()
-
+rotate_tester(-45)

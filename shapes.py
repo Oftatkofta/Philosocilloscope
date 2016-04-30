@@ -57,6 +57,18 @@ class Point(object):
         """
         return max(min(self.get_rounded_y(), max_y), 0)
 
+    def calculate_distance(self, other=Point(0,0)):
+        """
+        Calculates the distance between the point and another.
+        Args:
+            other: Ppint object or Shape
+
+        Returns:
+            float
+
+        """
+
+        return math.sqrt(abs(self.x-other.x) ** 2 + abs(self.y-other.y) ** 2)
 
     def __str__(self):
         return '<' + str(self.get_x()) + ',' + str(self.get_y()) + '>'
@@ -143,9 +155,17 @@ class Shape(Point):
             cop.translate(point)
             out += cop
 
+        out.__recalculate_centerPoint()
+
         return out
 
 
+    def __recalculate_centerPoint(self):
+
+        self.centerPoint = Point(
+            (self.max_x-self.min_x)/2.0, (self.max_y-self.min_y)/2.0)
+        self.x = self.centerPoint.get_x()
+        self.y = self.centerPoint.get_y()
 
     def get_n_points(self):
 
@@ -176,6 +196,8 @@ class Shape(Point):
             self.min_y = y_in
 
         self.npoints = len(self.points)
+        self.__recalculate_centerPoint()
+
 
     def add_points(self, pointlist):
         """
@@ -261,7 +283,7 @@ class Shape(Point):
 
         outArray = np.zeros((height,width),dtype = bool)
         for p in self.get_points():
-            out[p.get_constrained_y(height-1), p.get_constrained_x(width-1)] = True
+            outArray[p.get_constrained_y(height-1), p.get_constrained_x(width-1)] = True
 
         return outArray
 
@@ -291,6 +313,7 @@ class Shape(Point):
     #TODO shift the shape coordinates to DAC
 
     def rotate(self, angle):
+        #TODO fix bug where rotate shrinks shape
         """
         Rotates Shape around its origin Point.
 
@@ -356,7 +379,15 @@ class Shape(Point):
         """
         self.originPoint = point
 
+    #TODO shear transformation
 
+    def scale(self, xScale, yScale):
+    #TODO make this work
+        for i in range(len(self.points)):
+            p = self.points.pop(0)
+            new_x = p.get_x() * xScale
+            new_y = p.get_y() * yScale
+            self.add_point(Point(new_x, new_y))
 
     def sort_points(self):
         """ Sorts the pointlist in place on distance from Origo (0,0)
@@ -385,6 +416,7 @@ class Shape(Point):
         self.min_x += dx
         self.max_y += dy
         self.min_y += dy
+        self.centerPoint = self.__recalculate_centerPoint()
 
         for point in self.points:
             point.x += dx
@@ -583,10 +615,6 @@ class Bezier(Shape):
             y = tarray.dot(bernsteinPolynomials).dot(controlY)
 
             self.add_point(Point(float(x), float(y)))
-
-
-
-
 
 
 def binaryNumpyArrayToPoints(array):
