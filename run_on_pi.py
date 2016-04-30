@@ -83,11 +83,13 @@ po=Point(0,0)
 pt=Point(255,255)
 pc=Point(127,127)
 l=Shape(po)
-for i in xrange(0,1000):
+for i in xrange(2,2553):
     p1=Point(0,i)
     p2=Point(i,0)
-    b=Bezier(po,p1,p2,pt,19)
+    b=Bezier(po,p1,pt,p2, 30)
+    #t=Circle(pc, i/2,23)
     l+=b
+    
 for p in l.get_points():
     shiftOut(p)
         #time.sleep(0.01)
