@@ -57,18 +57,32 @@ class Point(object):
         """
         return max(min(self.get_rounded_y(), max_y), 0)
 
-    def calculate_distance(self, other=Point(0,0)):
+    def calculate_distance(self, other):
         """
-        Calculates the distance between the point and another.
+        Calculates the distance between the point and another point or the
+        centerpoint of a shape.
+
         Args:
-            other: Ppint object or Shape
+            other: Point object or Shape
 
         Returns:
             float
 
         """
+        return math.sqrt(abs(self.x-other.x) ** 2 + abs(self.y - other.y) ** 2)
 
-        return math.sqrt(abs(self.x-other.x) ** 2 + abs(self.y-other.y) ** 2)
+    def get_binary_x(self, nbits=8):
+        """
+        Returns a string with the n-bits binary representation of the (int) X
+         coordinate, defaults to 8-bit.
+
+        Args:
+             nbits: number of bits in representation, defaults to 8
+        Returns:
+            (str) binary representation of X
+        """
+
+        return bin(self.get_constrained_x(2**nbits))[2:].zfill(nbits)
 
     def __str__(self):
         return '<' + str(self.get_x()) + ',' + str(self.get_y()) + '>'

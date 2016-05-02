@@ -88,4 +88,4 @@ def rotate_tester(degrees):
     s.scale(1.5,1)
     s.draw()
 
-rotate_tester(-45)
+print p2.get_binary_x(4)
