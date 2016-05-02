@@ -71,34 +71,51 @@ def shiftOut(Point):
     
     latch()
 
+def shiftShape(shape):
+    for p in shape.get_points():
+        shiftOut(p)
 
-
-    #time.sleep(15)
 
 
 
 #print GPIO.RPI_INFO
 #reset()
-po=Point(0,0)
-pt=Point(255,255)
+p0=Point(0,0)
+p1=Point(0,255)
+p2=Point(255,255)
+p3=Point(255,0)
 pc=Point(127,127)
-l=Shape(po)
-for i in xrange(2,2553):
-    p1=Point(0,i)
-    p2=Point(i,0)
-    b=Bezier(po,p1,pt,p2, 30)
-    #t=Circle(pc, i/2,23)
-    l+=b
-    
-for p in l.get_points():
-    shiftOut(p)
+l=Shape(pc)
+#for i in xrange(2,255):
+    #p1=Point(0,i)
+    #p2=Point(i,0)
+    #b=Bezier(po,p1,pt,p2, 30)
+    #t=Circle(p1, i/2,i)
+    #l=b+t
+    #t=Square(pc, i/2, i/2, 128)
+    #shiftShape(t)
         #time.sleep(0.01)
 
 #reset()
 #s=imageToShape("testimage.tif")
 #for p in s.get_points():
 #    shiftOut(p)
+ppl=9
+try:
+    l=Line(p0, p1, ppl)
+    l+=Line(p1, p2, ppl)
+    l+=Line(p2, p3, ppl)
+    l+=Line(p3, p0, ppl)
+    l+=Line(p0, p2, ppl)
+    l+=Line(p1, p3, ppl)
+    while True:
+        #for i in xrange(2, 256, 4):
+        #    s = Square(pc, i, i, (i/16+4))
+        #    l+=s 
+        shiftShape(l)
 
-if not dryrunFlag:
-    print("Cleaning up GPIO")
-    GPIO.cleanup(channels_in_use)
+except KeyboardInterrupt:
+    print("Exiting...")
+    if not dryrunFlag:
+        print("Cleaning up GPIO")
+        GPIO.cleanup(channels_in_use)
