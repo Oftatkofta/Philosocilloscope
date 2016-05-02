@@ -437,7 +437,7 @@ class Shape(Point):
             point.y += dy
 
 class Circle(Shape):
-
+#TODO there is a bug here
     def __init__(self, origo_Point, radius, npoints):
         Shape.__init__(self, origo_Point, npoints, 'Circle')
         self.radius = radius
