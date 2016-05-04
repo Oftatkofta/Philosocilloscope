@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from copy import *
+import random
 
 
 class Point(object):
@@ -300,6 +301,14 @@ class Shape(Point):
             outArray[p.get_constrained_y(height-1), p.get_constrained_x(width-1)] = True
 
         return outArray
+
+    def get_random_point(self):
+        """
+
+        Returns: random Point from the shape
+
+        """
+        return random.choice(self.points)
 
     def draw(self, height=256, width=256):
         """
