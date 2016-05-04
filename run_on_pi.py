@@ -7,6 +7,7 @@ except ImportError:
     dryrunFlag = True
 import time
 from shapes import *
+import random
 
 """
 MR = GPIO18, pin12; Master Clear, active low
@@ -86,6 +87,7 @@ p2=Point(255,255)
 p3=Point(255,0)
 pc=Point(127,127)
 l=Shape(pc)
+reset()
 #for i in xrange(2,255):
     #p1=Point(0,i)
     #p2=Point(i,0)
@@ -100,19 +102,23 @@ l=Shape(pc)
 #s=imageToShape("testimage.tif")
 #for p in s.get_points():
 #    shiftOut(p)
-ppl=9
+ppl=25
 try:
-    l=Line(p0, p1, ppl)
+    l=Square(pc,200,200,25)
+    l+=Line(p0, p1, ppl)
     l+=Line(p1, p2, ppl)
     l+=Line(p2, p3, ppl)
     l+=Line(p3, p0, ppl)
     l+=Line(p0, p2, ppl)
     l+=Line(p1, p3, ppl)
+    
     while True:
         #for i in xrange(2, 256, 4):
         #    s = Square(pc, i, i, (i/16+4))
         #    l+=s 
         shiftShape(l)
+        #r=random.randint(126,128)
+        #l.translate(Point(r,r))
 
 except KeyboardInterrupt:
     print("Exiting...")
