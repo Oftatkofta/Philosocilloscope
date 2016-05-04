@@ -13,7 +13,7 @@ SH_CP = GPI23, pin16; clock
 
 """
 GPIOflag = True
-
+ppl=140
 if not GPIOflag:
     print("Using physical pin numbers")
     wiringpi.wiringPiSetup() #physical pin numbering
@@ -97,7 +97,6 @@ p3=Point(255,0)
 pc=Point(127,127)
 l=Shape(pc)
 
-ppl=100
 try:
     print("In the main loop...")
     l=Line(p0, p1, ppl)
@@ -107,11 +106,16 @@ try:
     l+=Line(p0, p2, ppl)
     l+=Line(p1, p3, ppl)
     while True:
-        #for i in xrange(0, 256):
-        #    shiftOut2(Point(i,i))
-        #    l+=s
-        shiftShape2(l)
-        #shiftShape2(l)
+        l = Shape()
+        #c0 = Circle(pc, 20, 12)
+        c=Circle(pc,127, 60)
+        for i in xrange(0, 10):
+            #pA = Point(0,i)
+            #pB = Point(i,i)
+            #c = Square(l, i+1,i+1, i+4)
+            #c = c*c0
+            b=Bezier(p0,c.get_random_point(), c.get_random_point(), c.get_random_point(), 60)  
+            shiftShape2(b)
 
 except KeyboardInterrupt:
     wiringpi.digitalWrite(outputEnablePin, 1)
