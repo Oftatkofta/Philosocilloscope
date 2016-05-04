@@ -56,5 +56,11 @@ Perfect! Now I can draw 180 points without obvious jitter.
 
 Migrating the whole shebang to Raspberry Pi2
 
-Using the RPi.GPIO library (0.6.2) I can shift a Point in 250-275 us, which gives ≈ 160-170 points on screen without jitter. 
+Using the RPi.GPIO library (0.6.2) I can shift a Point in 250-275 µs, which gives ≈ 160-170 points on screen without jitter.
+Shifting to the WiringPi C library (2.23) and the wiringPi-Python wrapper, I can shift a point in 450 µs, with ≈100 jitter-free on-screen points,
+by using the same type of for loop I was using with RPi.GPIO.
+
+However, if I use the built in wiringpi.shiftOut() function, which directly shifts out 8-bit integer values to the shift registers, then I can shift a Point in 50 µs, for a whopping 840 simultaneous smooth-as-velvet on-screen points!!!
+
+I wanted to test if there was any difference in which board setup I was using, but I couldn't get the physical pin numbering setup to work for some reason, so I just stuck with the Broadcom GPIO channel numbers.
 
