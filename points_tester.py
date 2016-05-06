@@ -88,4 +88,8 @@ def rotate_tester(degrees):
     s.scale(1.5,1)
     s.draw()
 
-print p2.get_binary_x(4)
+c = Circle(center, 127, 129)
+c+=Circle(p1, 127, 346)
+c+=Circle(p2, 127, 346)
+
+c.draw()

@@ -82,8 +82,19 @@ class Point(object):
         Returns:
             (str) binary representation of X
         """
-
         return bin(self.get_constrained_x(2**nbits))[2:].zfill(nbits)
+
+    def get_binary_y(self, nbits=8):
+        """
+        Returns a string with the n-bits binary representation of the (int) X
+         coordinate, defaults to 8-bit.
+
+        Args:
+             nbits: number of bits in representation, defaults to 8
+        Returns:
+            (str) binary representation of X
+        """
+        return bin(self.get_constrained_y(2 ** nbits))[2:].zfill(nbits)
 
     def __str__(self):
         return '<' + str(self.get_x()) + ',' + str(self.get_y()) + '>'
@@ -186,17 +197,27 @@ class Shape(Point):
 
         return len(self.points)
 
-    def add_point(self, point):
+    def add_point(self, point, recalculateCenterPoint=True):
+        """
 
+        Args:
+            point: Point object to add to the shape
+            recalculateCenterPoint: (Bool) if the centerpoint should be
+            recalculated after each addition, some _coordgen functions break if
+            True.
+
+        Returns: None, modifies shape in place
+
+        """
         self.points.append(point)
 
         x_in = point.get_x()
         y_in = point.get_y()
 
         if self.max_x == None:
-            self.max_x, self.min_x, self.x = x_in, x_in, x_in
-            self.max_y, self.min_y, self.y = y_in, y_in, y_in
-            self.centerPoint = point
+            self.max_x, self.min_x = x_in, x_in
+            self.max_y, self.min_y = y_in, y_in
+
 
         if x_in > self.max_x:
             self.max_x = x_in
@@ -211,8 +232,9 @@ class Shape(Point):
             self.min_y = y_in
 
         self.npoints = len(self.points)
-        self.__recalculate_centerPoint()
 
+        if recalculateCenterPoint:
+            self.__recalculate_centerPoint()
 
     def add_points(self, pointlist):
         """
@@ -266,7 +288,6 @@ class Shape(Point):
         return sorted(self.points,
                       key=lambda point: math.sqrt(point.x ** 2 + point.y ** 2))
 
-
     def get_points_as_C_array(self, variablename):
         """
         This method is good in case you want to generate some shapes for
@@ -280,7 +301,7 @@ class Shape(Point):
         """
         out = "uint16_t %s[] = {" %variablename
         for point in self.get_sorted_points():
-            "Constrains values to 8-bit"
+            #Constrains values to 8-bit
             x = point.get_constrained_x()
             y = point.get_constrained_y()
             out += str((x << 8) + y) + ', '
@@ -330,10 +351,6 @@ class Shape(Point):
         plt.gca().invert_yaxis()
         plt.show()
         return plt
-
-    #def sendToDAC(self, height=256, width=256):
-
-    #TODO shift the shape coordinates to DAC
 
     def rotate(self, angle):
         #TODO fix bug where rotate shrinks shape
@@ -388,7 +405,7 @@ class Shape(Point):
         self.centerPoint = Point((self.max_x - self.min_x)/2.0,
                                  (self.max_y - self.min_y)/2.0)
 
-    def set_origin(self, point):
+    def set_origin_point(self, point):
         """
         Sets the point which all object translations, rotations, scalings,
         and shearings are relative to.
@@ -398,6 +415,7 @@ class Shape(Point):
             point: Point object to relate all Shape transformations to.
 
         Returns:
+             None
 
         """
         self.originPoint = point
@@ -463,7 +481,7 @@ class Circle(Shape):
         for i in xrange(self.npoints):
             x = self.radius * math.cos(alpha*i) + self.x
             y = self.radius * math.sin(alpha*i) + self.y
-            self.add_point(Point(x, y))
+            self.add_point(Point(x, y), False)
 
 
 class Square(Shape):
