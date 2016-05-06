@@ -181,12 +181,12 @@ class Shape(Point):
             cop.translate(point)
             out += cop
 
-        out.__recalculate_centerPoint()
+        out._recalculate_centerPoint()
 
         return out
 
 
-    def __recalculate_centerPoint(self):
+    def _recalculate_centerPoint(self):
 
         self.centerPoint = Point(
             (self.max_x-self.min_x)/2.0, (self.max_y-self.min_y)/2.0)
@@ -234,7 +234,7 @@ class Shape(Point):
         self.npoints = len(self.points)
 
         if recalculateCenterPoint:
-            self.__recalculate_centerPoint()
+            self._recalculate_centerPoint()
 
     def add_points(self, pointlist):
         """
@@ -457,14 +457,14 @@ class Shape(Point):
         self.min_x += dx
         self.max_y += dy
         self.min_y += dy
-        self.centerPoint = self.__recalculate_centerPoint()
+        self.centerPoint = self._recalculate_centerPoint()
 
         for point in self.points:
             point.x += dx
             point.y += dy
 
 class Circle(Shape):
-#TODO there is a bug here
+
     def __init__(self, origo_Point, radius, npoints):
         Shape.__init__(self, origo_Point, npoints, 'Circle')
         self.radius = radius
@@ -482,7 +482,6 @@ class Circle(Shape):
             x = self.radius * math.cos(alpha*i) + self.x
             y = self.radius * math.sin(alpha*i) + self.y
             self.add_point(Point(x, y), False)
-
 
 class Square(Shape):
     def __init__(self, center_Point, width, heigth, npoints):
@@ -569,6 +568,8 @@ class Line(Shape):
     A line between two Point objects, containing npoints number of points
     """
     def __init__(self, Point0, Point1, npoints):
+        assert npoints >= 2, "A Line needs at least two points!"
+
         self.x0 = Point0.get_x()
         self.y0 = Point0.get_y()
         self.x1 = Point1.get_x()
@@ -590,12 +591,12 @@ class Line(Shape):
 
         dx = float(self.x1-self.x0)/(self.npoints-1)
         dy = float(self.y1-self.y0)/(self.npoints-1)
-        x = self.x0
-        y = self.y0
+
         for i in xrange(npoints):
             x = self.x0 + i * dx
             y = self.y0 + i * dy
-            self.add_point(Point(x, y))
+            self.add_point(Point(x, y), False)
+        #self._recalculate_centerPoint()
 
 class Bezier(Shape):
     """

@@ -14,7 +14,7 @@ from random import *
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
-
+from fontosaurus import *
 
 #fout=open('DAC_shiftreg/shiftregDAC/test.ino', 'w')
 
@@ -88,8 +88,8 @@ def rotate_tester(degrees):
     s.scale(1.5,1)
     s.draw()
 
-c = Circle(center, 127, 129)
-c+=Circle(p1, 127, 346)
-c+=Circle(p2, 127, 346)
+a = A(center,150,200,300)
 
-c.draw()
+a.draw(300,300)
+
+
