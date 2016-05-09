@@ -89,7 +89,7 @@ def rotate_tester(degrees):
     s.draw()
 
 a = A(center,150,200,300)
-
+a.sort_points(p1)
 a.draw(300,300)
 
 

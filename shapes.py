@@ -430,13 +430,21 @@ class Shape(Point):
             new_y = p.get_y() * yScale
             self.add_point(Point(new_x, new_y))
 
-    def sort_points(self):
-        """ Sorts the pointlist in place on distance from Origo (0,0)
+    def sort_points(self, sortPoint=Point(0,0)):
+        """ Sorts the pointlist in place on euclidian distance from sortPoint,
+         defaults to sorting from Origo (0,0).
+         Args:
+            sortPoint, Point Object
         :return:
         None
         """
+
+        assert type(sortPoint) is Point, "Not a Point!"
+        sort_x = sortPoint.get_x()
+        sort_y = sortPoint.get_y()
         self.points.sort(
-            key=lambda point: math.sqrt(point.x ** 2 + point.y ** 2))
+            key=lambda point: math.sqrt((point.get_x()-sort_x) ** 2
+                                        + (point.get_y()-sort_y) ** 2))
 
     def shuffle_points(self):
         """
