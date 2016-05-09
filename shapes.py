@@ -438,6 +438,15 @@ class Shape(Point):
         self.points.sort(
             key=lambda point: math.sqrt(point.x ** 2 + point.y ** 2))
 
+    def shuffle_points(self):
+        """
+        Randomly shuffles self.points
+
+        Returns: None, modifies pointslist in place
+
+        """
+        random.shuffle(self.points)
+
     def translate(self, translateToPoint):
         """
         Translates all points around a new centerpoint.
@@ -464,6 +473,12 @@ class Shape(Point):
             point.y += dy
 
     def remove_random_point(self):
+        """
+        Deletes a random point from the shape, updates npoints, and
+        recalculates bounding rectangel.
+        Returns: None, modifies Shape in place
+
+        """
 
         self.points.pop(random.randrange(len(self.points)))
         self.npoints -= 1
