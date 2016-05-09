@@ -105,17 +105,22 @@ try:
     l+=Line(p3, p0, ppl)
     l+=Line(p0, p2, ppl)
     l+=Line(p1, p3, ppl)
+    l=imageToShape("testimage.tif")
+
+    while l.get_n_points() > 900:
+        l.remove_random_point()
+
     while True:
-        l = imageToShape("testimage.tif")
+        #l = imageToShape("testimage.tif")
         #c0 = Circle(pc, 20, 12)
-        c=Circle(pc,127, 60)
+        #c=Circle(pc,127, 60)
         for i in xrange(0, 10):
             #pA = Point(0,i)
             #pB = Point(i,i)
             #c = Square(l, i+1,i+1, i+4)
             #c = c*c0
-            b=Bezier(p0,c.get_random_point(), c.get_random_point(), c.get_random_point(), 60)  
-            shiftShape2(b)
+            #b=Bezier(p0,c.get_random_point(), c.get_random_point(), c.get_random_point(), 60)
+            shiftShape2(l)
 
 except KeyboardInterrupt:
     wiringpi.digitalWrite(outputEnablePin, 1)

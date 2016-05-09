@@ -463,6 +463,12 @@ class Shape(Point):
             point.x += dx
             point.y += dy
 
+    def remove_random_point(self):
+
+        self.points.pop(random.randrange(len(self.points)))
+        self.npoints -= 1
+        self._recalculate_centerPoint()
+
 class Circle(Shape):
 
     def __init__(self, origo_Point, radius, npoints):
