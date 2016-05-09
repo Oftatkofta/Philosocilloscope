@@ -106,7 +106,7 @@ try:
     l+=Line(p0, p2, ppl)
     l+=Line(p1, p3, ppl)
     while True:
-        l = Shape()
+        l = imageToShape("testimage.tif")
         #c0 = Circle(pc, 20, 12)
         c=Circle(pc,127, 60)
         for i in xrange(0, 10):
