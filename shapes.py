@@ -127,7 +127,8 @@ class Shape(Point):
         self.max_y = None
         self.min_y = None
         self.centerPoint = center_Point #Center of the bounding rectangle
-        self.originPoint = center_Point #Pivot point for translations
+        # Pivot point for translations separate object from centerpoint
+        self.originPoint = Point(center_Point.x, center_Point.y)
 
     def __repr__(self):
         return 'Shape centered at(' + str(self.x) + ', ' + str(self.y) + ')'
@@ -189,7 +190,7 @@ class Shape(Point):
     def _recalculate_centerPoint(self):
 
         self.centerPoint = Point(
-            (self.max_x-self.min_x)/2.0, (self.max_y-self.min_y)/2.0)
+            (self.max_x-self.min_x)/2.0+self.min_x, (self.max_y-self.min_y)/2.0+self.min_y)
         self.x = self.centerPoint.get_x()
         self.y = self.centerPoint.get_y()
 
@@ -236,13 +237,13 @@ class Shape(Point):
         if recalculateCenterPoint:
             self._recalculate_centerPoint()
 
-    def add_points(self, pointlist):
+    def add_points(self, pointlist, recalculateCenterPoint=True):
         """
         :param pointlist: (list) list of Point objects to add to the shape
         :return: None
         """
         for point in pointlist:
-            self.add_point(point)
+            self.add_point(point, recalculateCenterPoint)
 
     def get_center_point(self):
         """
@@ -357,7 +358,7 @@ class Shape(Point):
         """
         Rotates Shape around its origin Point.
 
-        Positive angles give clockwise rotations.
+        Positive angles give counter clockwise rotations.
 
         Returns: Nothing, modifies Shape in place
 
@@ -380,14 +381,18 @@ class Shape(Point):
             x1 = p.get_x()
             y1 = p.get_y()
 
+            #translate to origin
             dx = x1 - x0
             dy = y1 - y0
 
-            dx = dx * cos + dy * -sin
+            #rotate
+            dx = dx * cos - dy * sin
             dy = dx * sin + dy * cos
 
+            #translate back
             new_x = dx + x0
             new_y = dy + y0
+
             self.points[i] = Point(new_x, new_y)
 
             if new_x > self.max_x:
@@ -402,8 +407,91 @@ class Shape(Point):
             if new_y < self.min_y:
                 self.min_y = new_y
 
-        self.centerPoint = Point((self.max_x - self.min_x)/2.0,
-                                 (self.max_y - self.min_y)/2.0)
+        self._recalculate_centerPoint()
+
+    def rotate2(self, angle):
+        # TODO fix bug where rotate shrinks shape
+        """
+        Rotates Shape around its origin Point.
+        Positive angles give counter clockwise rotations.
+
+        The rotation is done by translating the point to from its
+        centerpoint to origin, rotating, and translating back to the
+        centerpoint. This is accomplished by creating matrixes for each of the
+        operations and then multiplying them together into one transformation
+        matrix.
+        Translation cannot be represented as a 2D matrix, therefore we need to
+        utilize hyperspace (N+1 dimensions).
+
+
+        Returns: Nothing, modifies Shape in place
+
+        Args:
+            (float) or (int) angle: rotational angle in radians
+
+        """
+        origin = self.originPoint
+        center = self.centerPoint
+
+        cos_alpha = math.cos(angle)
+        sin_alpha = math.sin(angle)
+
+        rotation_matrix = np.array([[cos_alpha, sin_alpha, 0],
+                                    [-sin_alpha, cos_alpha, 0],
+                                    [0, 0, 1]])
+
+        tx = center.get_x() - origin.get_x()
+        ty = center.get_y() - origin.get_y()
+
+
+
+        translation_matrix_1 = np.array([[1, 0, 0],
+                                         [0, 1, 0],
+                                         [-tx, -ty, 1]])
+
+
+        translation_matrix_2 = np.array([[1, 0, 0],
+                                        [0, 1, 0],
+                                        [tx, ty, 1]])
+
+
+        #transformation_matrix = rotation_matrix
+        transformation_matrix = np.matmul(translation_matrix_1,
+                                          rotation_matrix)
+
+        transformation_matrix = np.matmul(transformation_matrix,
+                                          translation_matrix_2)
+
+        transformation_matrix = translation_matrix_1
+
+        for i in xrange(len(self.points)):
+
+                p = self.points[i]
+
+                pV = np.array([p.get_x(), p.get_y(), 1])
+
+
+                pT = np.matmul(pV, transformation_matrix)
+                #pT = np.matmul(pV, translation_matrix_1)
+
+                new_x, new_y  = pT[0], pT[1]
+
+
+                self.points[i] = Point(new_x, new_y)
+
+                if new_x > self.max_x:
+                    self.max_x = new_x
+
+                if new_y > self.max_y:
+                    self.max_y = new_y
+
+                if new_x < self.min_x:
+                    self.min_x = new_x
+
+                if new_y < self.min_y:
+                    self.min_y = new_y
+
+        self._recalculate_centerPoint()
 
     def set_origin_point(self, point):
         """
@@ -625,7 +713,7 @@ class Line(Shape):
             x = self.x0 + i * dx
             y = self.y0 + i * dy
             self.add_point(Point(x, y), False)
-        #self._recalculate_centerPoint()
+        self._recalculate_centerPoint()
 
 class Bezier(Shape):
     """

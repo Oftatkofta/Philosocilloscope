@@ -76,20 +76,30 @@ def beziercle():
         o += b
     o.draw()
 
-def rotate_tester(degrees):
+def rotate_tester(degrees, nshapes):
 
-    l = Square(center, 45, 150, 67)
-    s = Square(center, 45, 150, 67)
-    s.set_origin(center)
-    l.set_origin(center)
 
-    l.rotate(math.radians(degrees))
-    s+=l
-    s.scale(1.5,1)
+    s0 = Square(center, 75, 150,100)
+    s0.set_origin_point(p1)
+    s=deepcopy(s0)
+    for i in range(nshapes):
+        s1 = deepcopy(s0)
+        s1.rotate2(math.radians(degrees))
+        s += s1
+        degrees+=degrees
+
+    #s.scale(1.5,1)
     s.draw()
 
-a = A(center,150,200,300)
-a.sort_points(p1)
-a.draw(300,300)
+def a_teter(width, height, ppa, alpha):
+    w=0
+    o=Shape()
+    while w<255:
+        p=A(Point(w, 127), width, height, ppa)
+        p.rotate(alpha*w)
+        o+=p
+        w+=width
+    o.draw()
 
-
+#a_teter(150,200, 40, math.pi/18)
+rotate_tester(1,50)
